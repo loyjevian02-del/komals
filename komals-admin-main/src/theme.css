@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Jmaart logo palette: deep red + dark teal + gold */
+  --surface: #fdfaf5;
+  --surface-dim: #ded9cc;
+  --surface-bright: #fdfaf5;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f8f3e9;
+  --surface-container: #f2ecdd;
+  --surface-container-high: #ece4d0;
+  --surface-container-highest: #e6ddc4;
+  --on-surface: #201b12;
+  --on-surface-variant: #154a4a;
+  --inverse-surface: #123030;
+  --inverse-on-surface: #eef4f2;
+  --outline: #7a7160;
+  --outline-variant: #d7c9a3;
+  --surface-tint: #d31f26;
+  --primary: #d31f26;
+  --on-primary: #ffffff;
+  --primary-container: #a3151b;
+  --on-primary-container: #fff5f5;
+  --secondary: #154a4a;
+  --on-secondary: #ffffff;
+  --secondary-container: #cfe3e0;
+  --on-secondary-container: #123939;
+  --tertiary: #96721a;
+  --on-tertiary: #ffffff;
+  --tertiary-container: #f6c343;
+  --on-tertiary-container: #4a3600;
+  --error: #ba1a1a;
+  --on-error: #ffffff;
+  --error-container: #ffdad6;
+  --on-error-container: #93000a;
+  --background: #fdfaf5;
+  --on-background: #201b12;
+  --surface-variant: #e6ddc4;
+  --radius: 16px;
+  --shadow-md: 0 4px 16px -6px rgba(18, 48, 48, 0.14);
+  --shadow-lg: 0 12px 28px -14px rgba(18, 48, 48, 0.26);
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--on-background);
+  font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+
+button { font-family: inherit; cursor: pointer; }
+
+h1, h2, h3 {
+  font-weight: 650;
+  letter-spacing: -0.4px;
+}
+
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface-container-highest); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--outline-variant); }
+
+.category-tile, .hover-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.category-tile:hover, .hover-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--outline-variant);
+}

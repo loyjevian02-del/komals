@@ -1,0 +1,155 @@
+name: Deploy Komals
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# ponytail: one SSH setup step is duplicated per job. GitHub has no
+# job-level shared setup without a composite action; 6 lines x3 beats
+# a whole .github/actions/ directory. Extract if a 4th app appears.
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      admin: ${{ steps.filter.outputs.admin }}
+      storefront: ${{ steps.filter.outputs.storefront }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'komals-backend-main/**'
+              - '.github/workflows/deploy.yml'
+            admin:
+              - 'komals-admin-main/**'
+              - '.github/workflows/deploy.yml'
+            storefront:
+              - 'komals-storefront-main/**'
+              - '.github/workflows/deploy.yml'
+
+  backend:
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: komals-backend-main
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Build backend
+        run: mvn clean package -DskipTests
+
+      - name: Verify JAR
+        run: ls -lh target/catalog-backend.jar
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "${{ secrets.SERVER_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Upload JAR
+        run: |
+          scp target/catalog-backend.jar \
+            "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/komals/catalog-backend/catalog-backend.jar"
+
+      - name: Restart backend
+        run: |
+          ssh "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}" \
+            "sudo systemctl restart komals-catalog"
+
+      - name: Check backend
+        run: |
+          ssh "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}" \
+            "sudo systemctl is-active --quiet komals-catalog"
+
+      - name: Show logs
+        if: failure()
+        run: |
+          ssh "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}" \
+            "sudo journalctl -u komals-catalog -n 100 --no-pager"
+
+  admin:
+    needs: changes
+    if: needs.changes.outputs.admin == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: komals-admin-main
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: komals-admin-main/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build admin
+        run: npm run build
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "${{ secrets.SERVER_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Upload admin
+        run: |
+          rsync -avz --delete dist/ \
+            "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/komals-admin/"
+
+  storefront:
+    needs: changes
+    if: needs.changes.outputs.storefront == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: komals-storefront-main
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: komals-storefront-main/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build storefront
+        run: npm run build
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "${{ secrets.SERVER_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Upload storefront
+        run: |
+          rsync -avz --delete dist/ \
+            "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/komals-storefront/"
