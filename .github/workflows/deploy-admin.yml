@@ -1,0 +1,44 @@
+name: Deploy Komals Admin
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'komals-admin-main/**'
+      - '.github/workflows/deploy-admin.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: komals-admin-main
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: komals-admin-main/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build admin
+        run: npm run build
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "${{ secrets.SERVER_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Upload admin
+        run: |
+          rsync -avz --delete dist/ \
+            "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/komals-admin/"

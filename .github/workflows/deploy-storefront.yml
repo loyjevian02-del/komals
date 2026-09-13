@@ -1,0 +1,44 @@
+name: Deploy Komals Storefront
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'komals-storefront-main/**'
+      - '.github/workflows/deploy-storefront.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: komals-storefront-main
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: komals-storefront-main/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build storefront
+        run: npm run build
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "${{ secrets.SERVER_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Upload storefront
+        run: |
+          rsync -avz --delete dist/ \
+            "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/komals-storefront/"

@@ -1,0 +1,60 @@
+name: Deploy Komals Backend
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'komals-backend-main/**'
+      - '.github/workflows/deploy-backend.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: komals-backend-main
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Build backend
+        run: mvn clean package -DskipTests
+
+      - name: Verify JAR
+        run: ls -lh target/catalog-backend.jar
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "${{ secrets.SERVER_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Upload JAR
+        run: |
+          scp target/catalog-backend.jar \
+            "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/komals/catalog-backend/catalog-backend.jar"
+
+      - name: Restart backend
+        run: |
+          ssh "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}" \
+            "sudo systemctl restart komals-catalog"
+
+      - name: Check backend
+        run: |
+          ssh "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}" \
+            "sudo systemctl is-active --quiet komals-catalog"
+
+      - name: Show logs
+        if: failure()
+        run: |
+          ssh "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}" \
+            "sudo journalctl -u komals-catalog -n 100 --no-pager"
