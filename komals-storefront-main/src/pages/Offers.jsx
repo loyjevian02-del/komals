@@ -17,9 +17,9 @@ export default function Offers() {
       {/* Page Header */}
       <div className="offers-page-header">
         <div className="container">
-          <span className="section-eyebrow" style={{ color: 'var(--gold-light)' }}>Exclusive</span>
+          <span className="section-eyebrow">Exclusive</span>
           <h1 className="offers-page-header__title">Offers & Promotions</h1>
-          <div style={{ width: 48, height: 1.5, background: 'var(--gold)', marginTop: 14, opacity: 0.7 }} />
+          <div style={{ width: 48, height: 1.5, background: 'var(--primary)', marginTop: 14, opacity: 0.5 }} />
         </div>
       </div>
 
@@ -43,7 +43,7 @@ export default function Offers() {
               <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
                 <circle cx="26" cy="26" r="25" stroke="var(--outline-variant)" strokeWidth="1.2" />
                 <path d="M18 26 C18 21.6 21.6 18 26 18 C30.4 18 34 21.6 34 26 C34 30.4 30.4 34 26 34 C21.6 34 18 30.4 18 26Z" stroke="var(--outline)" strokeWidth="1" fill="none" />
-                <path d="M26 22 L26 26 L29 29" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" />
+                <path d="M26 22 L26 26 L29 29" stroke="var(--primary)" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
             </div>
             <h2 className="offers-empty__title">Check Back Soon</h2>
@@ -85,14 +85,15 @@ export default function Offers() {
 
       <style>{`
         .offers-page-header {
-          background: var(--primary);
+          background: var(--surface-container-lowest);
+          border-bottom: 1px solid var(--outline-variant);
           padding: 52px 0 48px;
         }
         .offers-page-header__title {
           font-family: var(--font-serif);
           font-size: clamp(28px, 4vw, 44px);
           font-weight: 600;
-          color: #fff;
+          color: var(--on-surface);
           margin: 10px 0;
         }
         .offers-grid {
@@ -110,7 +111,7 @@ export default function Offers() {
         .offer-card:hover {
           transform: translateY(-4px);
           box-shadow: var(--shadow-lg);
-          border-color: var(--gold);
+          border-color: var(--outline);
         }
         .offer-card__img-wrap {
           position: relative;
@@ -129,7 +130,7 @@ export default function Offers() {
         .offer-card__img-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(to top, rgba(74,13,24,0.2) 0%, transparent 50%);
+          background: linear-gradient(to top, rgba(26,20,22,0.2) 0%, transparent 50%);
         }
         .offer-card__body {
           padding: 20px 22px 24px;

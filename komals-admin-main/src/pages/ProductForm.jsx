@@ -4,7 +4,7 @@ import { api } from '../lib/api.js';
 import { MultiImageUploader } from '../components/ImageUploader.jsx';
 
 const empty = {
-  title: '', description: '', slug: '', partNo: '', price: '', compareAtPrice: '',
+  title: '', description: '', searchKeywords: '', seoTitle: '', seoDescription: '', slug: '', partNo: '', price: '', compareAtPrice: '',
   unit: '', active: true, categoryId: '', images: [],
 };
 
@@ -69,12 +69,12 @@ export default function ProductForm() {
         <div className="field">
           <label>Category</label>
           <select value={form.categoryId} onChange={(e) => set('categoryId', e.target.value)}>
-            <option value="">— None —</option>
+            <option value="">â€” None â€”</option>
             {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
         {/* <div className="field">
-          <label>Price (₹)</label>
+          <label>Price (â‚¹)</label>
           <input required type="number" step="0.01" min="0" value={form.price} onChange={(e) => set('price', e.target.value)} />
         </div>
         <div className="field">
@@ -92,6 +92,19 @@ export default function ProductForm() {
         <div className="field field-span-all">
           <label>Description</label>
           <textarea value={form.description || ''} onChange={(e) => set('description', e.target.value)} />
+        </div>
+        <div className="field field-span-all">
+          <label>Search keywords</label>
+          <input value={form.searchKeywords || ''} onChange={(e) => set('searchKeywords', e.target.value)} placeholder="e.g. Mangalore, Mangaluru, chakkuli, chakli" />
+          <small>Use only natural names, spellings and regional terms that genuinely describe this product.</small>
+        </div>
+        <div className="field field-span-all">
+          <label>SEO title (optional)</label>
+          <input value={form.seoTitle || ''} onChange={(e) => set('seoTitle', e.target.value)} maxLength="60" placeholder="e.g. Crispy Chakkuli in Mangaluru" />
+        </div>
+        <div className="field field-span-all">
+          <label>SEO description (optional)</label>
+          <textarea value={form.seoDescription || ''} onChange={(e) => set('seoDescription', e.target.value)} maxLength="160" placeholder="A clear one or two sentence summary for search results." />
         </div>
         <div className="field field-span-all">
           <label>Images</label>

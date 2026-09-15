@@ -70,7 +70,7 @@ export default function SearchResults() {
         <div className="container">
           <div className="search-page-header__inner">
             <div>
-              <span className="section-eyebrow" style={{ color: 'var(--gold-light)' }}>Search Results</span>
+              <span className="section-eyebrow">Search Results</span>
               <h1 className="search-page-header__title">
                 {q ? (
                   <><em>"{q}"</em></>
@@ -144,7 +144,8 @@ export default function SearchResults() {
 
       <style>{`
         .search-page-header {
-          background: var(--primary);
+          background: var(--surface-container-lowest);
+          border-bottom: 1px solid var(--outline-variant);
           padding: 44px 0 40px;
         }
         .search-page-header__inner {
@@ -158,18 +159,18 @@ export default function SearchResults() {
           font-family: var(--font-serif);
           font-size: clamp(26px, 4vw, 42px);
           font-weight: 600;
-          color: #fff;
+          color: var(--on-surface);
           margin: 8px 0 12px;
         }
         .search-page-header__title em {
           font-style: italic;
-          color: var(--gold-light);
+          color: var(--primary);
         }
         .search-results-count {
           display: inline-block;
-          background: rgba(201,168,76,0.18);
-          border: 1px solid rgba(201,168,76,0.35);
-          color: var(--gold-light);
+          background: var(--primary-container);
+          border: 1px solid var(--outline-variant);
+          color: var(--primary);
           font-size: 11px;
           font-weight: 600;
           letter-spacing: 0.08em;
@@ -182,9 +183,9 @@ export default function SearchResults() {
           align-items: center;
           gap: 6px;
           padding: 8px 16px;
-          background: rgba(255,255,255,0.1);
-          border: 1px solid rgba(255,255,255,0.2);
-          color: rgba(255,255,255,0.8);
+          background: transparent;
+          border: 1px solid var(--outline);
+          color: var(--on-surface-variant);
           border-radius: var(--radius-sm);
           font-size: 12px;
           font-weight: 600;
@@ -196,8 +197,8 @@ export default function SearchResults() {
           margin-top: 4px;
         }
         .search-clear-btn:hover {
-          background: rgba(255,255,255,0.18);
-          color: #fff;
+          background: var(--surface-container-low);
+          color: var(--primary);
         }
         .search-empty {
           text-align: center;

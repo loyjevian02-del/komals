@@ -2,11 +2,11 @@ import axios from 'axios';
 
 export const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8083';
 
-const TOKEN_KEY = 'jmaart_admin_token';
-const USER_KEY = 'jmaart_admin_user';
+const TOKEN_KEY = 'komals_admin_token';
+const USER_KEY = 'komals_admin_user';
 
 export function getToken() {
-  return localStorage.getItem(TOKEN_KEY);
+  return localStorage.getItem(TOKEN_KEY) || localStorage.getItem('jmaart_admin_token');
 }
 
 export function setToken(token) {
@@ -16,6 +16,8 @@ export function setToken(token) {
 export function clearToken() {
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(USER_KEY);
+  localStorage.removeItem('jmaart_admin_token');
+  localStorage.removeItem('jmaart_admin_user');
 }
 
 export function getUser() {

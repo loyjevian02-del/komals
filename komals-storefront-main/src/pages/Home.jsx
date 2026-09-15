@@ -2,9 +2,11 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { api, imageUrl } from '../lib/api.js';
 import ProductCard from '../components/ProductCard.jsx';
-import { ArrowRight, Gem, Clock, Leaf, Star } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Reveal from '../components/animations/Reveal.jsx';
+import Seo, { siteSchema } from '../components/Seo.jsx';
+import ContactDetails from '../components/ContactDetails.jsx';
 function OfferCard({ offer }) {
   return (
     <motion.div
@@ -32,10 +34,10 @@ function OfferCard({ offer }) {
       {(!offer.image || offer.showText) && (
         <div style={{
           position: 'absolute', inset: 0,
-          background: offer.image ? 'linear-gradient(to top, rgba(74,13,24,0.85) 0%, transparent 55%)' : 'var(--primary)',
+          background: offer.image ? 'linear-gradient(to top, rgba(26,20,22,0.85) 0%, transparent 55%)' : 'var(--primary)',
           zIndex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: 28,
         }}>
-          {offer.badge && <motion.span initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6, ease: [0.22, 1, 0.36, 1] }} style={{ display: 'inline-block', marginBottom: 10, alignSelf: 'flex-start', background: 'var(--gold)', color: '#fff', fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 12px', borderRadius: 2 }}>{offer.badge}</motion.span>}
+          {offer.badge && <motion.span initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6, ease: [0.22, 1, 0.36, 1] }} style={{ display: 'inline-block', marginBottom: 10, alignSelf: 'flex-start', background: 'var(--primary)', color: '#fff', fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '4px 12px', borderRadius: 2 }}>{offer.badge}</motion.span>}
           {offer.title && <motion.h3 initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.6, ease: [0.22, 1, 0.36, 1] }} style={{ color: '#fff', fontFamily: 'var(--font-serif)', fontSize: 22, fontWeight: 600, marginBottom: 6 }}>{offer.title}</motion.h3>}
           {offer.description && <motion.p initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.6, ease: [0.22, 1, 0.36, 1] }} style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13, margin: 0 }}>{offer.description}</motion.p>}
         </div>
@@ -89,7 +91,7 @@ function OfferCarousel({ offers }) {
             <motion.button key={o.id} type="button" aria-label={`Show offer ${i + 1}`} onClick={() => { setIndex(i); scheduleAutoplay(); }}
               animate={{
                 width: i === index ? 24 : 8,
-                background: i === index ? 'var(--gold)' : 'var(--outline-variant)'
+                background: i === index ? 'var(--primary)' : 'var(--outline-variant)'
               }}
               whileTap={{ scale: 0.9 }}
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
@@ -103,45 +105,42 @@ function OfferCarousel({ offers }) {
 
 export default function Home() {
   const [offers, setOffers] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [featuredProducts, setFeaturedProducts] = useState([]);
-  const [sortBy, setSortBy] = useState('createdAt,desc');
-  const [totalElements, setTotalElements] = useState(0);
+  const [sortBy] = useState('createdAt,desc');
   const [productsLoading, setProductsLoading] = useState(true);
   const [settings, setSettings] = useState(null);
 
   useEffect(() => {
     api.get('/store/offers').then((r) => setOffers(r.data)).catch(() => { });
-    api.get('/store/categories').then((r) => setCategories(r.data)).catch(() => { });
     api.get('/store/settings').then((r) => setSettings(r.data)).catch(() => { });
   }, []);
 
 
   const loadFeaturedProducts = useCallback(() => {
     setProductsLoading(true);
-    api.get('/store/products', { params: { size: 4, sort: sortBy } })
+    api.get('/store/products', { params: { size: 10, sort: sortBy } })
       .then((r) => {
-        if (r.data && Array.isArray(r.data.content)) { setFeaturedProducts(r.data.content); setTotalElements(r.data.totalElements || r.data.content.length); }
-        else if (Array.isArray(r.data)) { setFeaturedProducts(r.data); setTotalElements(r.data.length); }
+        if (r.data && Array.isArray(r.data.content)) setFeaturedProducts(r.data.content);
+        else if (Array.isArray(r.data)) setFeaturedProducts(r.data);
       })
       .catch(() => { }).finally(() => setProductsLoading(false));
   }, [sortBy]);
 
   useEffect(() => { loadFeaturedProducts(); }, [loadFeaturedProducts]);
 
-  const heroImage = offers.find(o => o.image)?.image;
-  function handleStoryClick(e) {
-    setMenuOpen(false);
-    if (location.pathname === '/') {
-      e.preventDefault();
-      const el = document.getElementById('our-story');
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
-      }
+  useEffect(() => {
+    if (window.location.hash === '#our-story' || window.location.hash === '#about-us') {
+      const timer = setTimeout(() => {
+        const el = document.getElementById('about-us') || document.getElementById('our-story');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 150);
+      return () => clearTimeout(timer);
     }
-  }
+  }, []);
+
   return (
     <div className="home-page">
+      <Seo title="Mangaluru Sweets, Halwas & Chakkuli" description={"Discover Komal's Sweet Palace for traditional Mangaluru sweets, halwas, chakkuli and savouries. Explore fresh, authentic favourites for every celebration."} schema={siteSchema} />
       {/* {offers.length > 0 && (
         <section aria-label="Special Offers" style={{ background: 'var(--primary)', paddingTop: '32px' }}>
           <div className="container" style={{ maxWidth: 900, margin: '0 auto' }}>
@@ -207,85 +206,24 @@ export default function Home() {
       <section className="promise-strip" aria-label="Brand promises">
         <div className="container">
           <div className="promise-strip__inner">
-            <div className="promise-item"><Gem size={20} className="promise-item__icon" /><span className="promise-item__text">Handcrafted Daily</span></div>
-            <div className="promise-sep" />
-            <div className="promise-item"><Star size={20} className="promise-item__icon" /><span className="promise-item__text">Authentic Recipes</span></div>
-            <div className="promise-sep" />
-            <div className="promise-item"><Leaf size={20} className="promise-item__icon" /><span className="promise-item__text">Pure Ingredients</span></div>
-            <div className="promise-sep" />
-            <div className="promise-item"><Clock size={20} className="promise-item__icon" /><span className="promise-item__text">Freshly Packed</span></div>
+            <span className="promise-item__text">Traditional Ã¢â‚¬Â¢ Authentic Ã¢â‚¬Â¢ Fresh Ã¢â‚¬Â¢ Premium</span>
           </div>
         </div>
       </section>
 
-      {categories.length > 0 && (
-        <Reveal>
-          <section className="section home-categories" aria-label="Sweet collection">
-            <div className="container">
-              <div className="section-header">
-                <span className="section-eyebrow">Our Collection</span>
-                <h2 className="section-heading">What Are You Craving Today?</h2>
-                <div className="gold-divider" />
-              </div>
-              <motion.div
-                className="cat-grid"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-40px" }}
-                variants={{
-                  visible: { transition: { staggerChildren: 0.08 } },
-                }}
-              >
-                {categories.map((cat) => (
-                  <motion.div
-                    key={cat.id}
-                    variants={{
-                      hidden: { opacity: 0, y: 25 },
-                      visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
-                    }}
-                  >
-                    <Link to={`/categories/${cat.slug}`} className="cat-card" aria-label={cat.name}>
-                      <div className="cat-card__img-wrap">
-                        {cat.image ? <img src={imageUrl(cat.image)} alt={cat.name} className="cat-card__img" loading="lazy" /> : <div className="cat-card__placeholder"><span>{cat.name[0]}</span></div>}
-                        <div className="cat-card__overlay" />
-                      </div>
-                      <div className="cat-card__body">
-                        <span className="cat-card__name">{cat.name}</span>
-                        <ArrowRight size={14} className="cat-card__arrow" />
-                      </div>
-                    </Link>
-                  </motion.div>
-                ))}
-              </motion.div>
-              <div className="cat-action-wrap"><Link to="/categories" className="btn-outline">View All Categories <ArrowRight size={14} /></Link></div>
-            </div>
-          </section>
-        </Reveal>
-      )}
-
       <Reveal>
-        <section className="section home-products" aria-label="Featured products" style={{ background: 'var(--surface-container-lowest)' }}>
+        <section className="section home-products" aria-label="Featured products">
           <div className="container">
             <div className="section-header">
-              <span className="section-eyebrow">Our Signature</span>
-              <h2 className="section-heading">Assortments Galore</h2>
-              <div className="gold-divider" />
-            </div>
-            <div className="sort-bar">
-              <span className="sort-bar__count">{totalElements > 0 ? `${totalElements} Handpicked Delicacies` : ''}</span>
-              <div className="sort-bar__right">
-                <label htmlFor="home-sort" className="sort-bar__label">Sort by</label>
-                <select id="home-sort" value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="sort-select">
-                  <option value="createdAt,desc">Newest First</option>
-                  <option value="title,asc">Alphabetical (A-Z)</option>
-                  {/* <option value="price,asc">Price: Low to High</option> */}
-                  {/* <option value="price,desc">Price: High to Low</option> */}
-                </select>
+              <div>
+                <span className="section-eyebrow">Our Signature</span>
+                <h2 className="section-heading">Assortments Galore</h2>
               </div>
+              <Link to="/products" className="section-header__link">View all <ArrowRight size={14} /></Link>
             </div>
             {productsLoading ? (
               <div className="desktop-grid-mobile-scroll">
-                {Array.from({ length: 4 }).map((_, i) => (
+                {Array.from({ length: 6 }).map((_, i) => (
                   <div key={i} className="product-skeleton">
                     <div className="skeleton product-skeleton__img" />
                     <div style={{ padding: '14px 16px' }}>
@@ -316,12 +254,13 @@ export default function Home() {
                 ))}
               </motion.div>
             )}
-            <div className="prod-action-wrap"><Link to="/categories" className="btn-primary">Shop All Sweets <ArrowRight size={14} /></Link></div>
+            <div className="prod-action-wrap"><Link to="/products" className="btn-outline">View All Products <ArrowRight size={14} /></Link></div>
           </div>
         </section>
       </Reveal>
       <Reveal>
         <section id="our-story" className="story-section" aria-label="Our story">
+          <div id="about-us" />
           <div className="container">
             <div className="story-section__inner">
 
@@ -339,18 +278,18 @@ export default function Home() {
                   )}
                 </h2>
                 <p className="story-section__body story-item-body">
-                  {settings?.storyBody ?? "Komal's Sweet Palace has been a part of your celebrations for generations. From our humble beginnings to today, we continue to craft sweets that bring people together — because every moment deserves something sweet."}
+                  {settings?.storyBody ?? "Komal's Sweet Palace has been a part of your celebrations for generations. From our humble beginnings to today, we continue to craft sweets that bring people together Ã¢â‚¬â€ because every moment deserves something sweet."}
                 </p>
               </div>
 
               <div className="story-section__deco story-item-image">
                 {settings?.storyImage ? (
-                  <img src={imageUrl(settings.storyImage)} alt="Our Story" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'var(--radius)' }} />
+                  <img src={imageUrl(settings.storyImage)} alt="Our Story" style={{ width: '100%', height: 'auto', objectFit: 'contain', borderRadius: 'var(--radius)' }} />
                 ) : (
                   <svg viewBox="0 0 200 200" className="story-deco-svg" aria-hidden="true">
-                    <circle cx="100" cy="100" r="96" fill="none" stroke="var(--gold)" strokeWidth="0.8" />
-                    <circle cx="100" cy="100" r="80" fill="none" stroke="var(--gold)" strokeWidth="0.4" opacity="0.5" />
-                    <path d="M100 10 L110 90 L190 100 L110 110 L100 190 L90 110 L10 100 L90 90 Z" fill="none" stroke="var(--gold)" strokeWidth="0.6" opacity="0.7" />
+                    <circle cx="100" cy="100" r="96" fill="none" stroke="var(--primary)" strokeWidth="0.8" />
+                    <circle cx="100" cy="100" r="80" fill="none" stroke="var(--primary)" strokeWidth="0.4" opacity="0.5" />
+                    <path d="M100 10 L110 90 L190 100 L110 110 L100 190 L90 110 L10 100 L90 90 Z" fill="none" stroke="var(--primary)" strokeWidth="0.6" opacity="0.7" />
                   </svg>
                 )}
               </div>
@@ -359,6 +298,49 @@ export default function Home() {
           </div>
         </section>
       </Reveal>
+
+      <Reveal>
+        <section className="section" aria-labelledby="mangaluru-sweets-heading">
+          <div className="container" style={{ maxWidth: 900 }}>
+            <span className="section-eyebrow">A taste of coastal Karnataka</span>
+            <h2 id="mangaluru-sweets-heading" className="section-heading">Traditional Mangaluru sweets and savouries</h2>
+            <p style={{ color: 'var(--on-surface-variant)', lineHeight: 1.8, maxWidth: 760 }}>
+              Komal&apos;s Sweet Palace brings together the flavours people look for in Mangalore and Mangaluru: rich halwas, crisp chakkuli, festive sweets and everyday savouries. Browse our collection for treats to share at home, take to family gatherings or add to your festival table.
+            </p>
+            <p style={{ color: 'var(--on-surface-variant)', lineHeight: 1.8, maxWidth: 760 }}>
+              Whether you search for Mangaluru sweets, Mangalore halwa or chakkuli, our catalogue helps you find the products you love quickly. Each product page includes clear details and an enquiry option.
+            </p>
+          </div>
+        </section>
+      </Reveal>
+
+      <Reveal>
+        <section className="section" style={{ background: 'var(--surface-container-low)' }} aria-labelledby="faq-heading">
+          <div className="container" style={{ maxWidth: 900 }}>
+            <span className="section-eyebrow">Helpful answers</span>
+            <h2 id="faq-heading" className="section-heading">Mangaluru sweets FAQs</h2>
+            <div style={{ display: 'grid', gap: 18, color: 'var(--on-surface-variant)', lineHeight: 1.7 }}>
+              <div><h3 style={{ color: 'var(--on-surface)', marginBottom: 6 }}>What can I find at Komal&apos;s Sweet Palace?</h3><p>Explore traditional sweets, halwas, chakkuli and savouries. Availability changes with fresh preparation, so check the catalogue for current products.</p></div>
+              <div><h3 style={{ color: 'var(--on-surface)', marginBottom: 6 }}>Do you take bulk or gifting enquiries?</h3><p>Yes. Contact us for celebrations, festivals, office gifting and other bulk requirements. We&apos;ll help you choose suitable products and quantities.</p></div>
+              <div><h3 style={{ color: 'var(--on-surface)', marginBottom: 6 }}>Is Mangalore the same as Mangaluru?</h3><p>Yes. Mangaluru is the official name of Mangalore. We use both names so customers can find traditional local sweets using the terms they know.</p></div>
+            </div>
+          </div>
+        </section>
+      </Reveal>
+      <Reveal>
+        <section id="contact" className="section home-contact" aria-label="Contact">
+          <div className="container">
+            <div className="section-header">
+              <div>
+                <span className="section-eyebrow">Get in Touch</span>
+                <h2 className="section-heading">Visit or Call Us</h2>
+              </div>
+            </div>
+            {settings && <ContactDetails settings={settings} />}
+          </div>
+        </section>
+      </Reveal>
+
       {/* <section className="gifting-section" aria-label="Gifting">
         <div className="container">
           <div className="gifting-section__inner">
@@ -374,9 +356,21 @@ export default function Home() {
 
       <style>{`
        .home-page { overflow-x: clip; }
-        .section-header { text-align: center; margin-bottom: 48px; }
-        .cat-action-wrap { text-align: center; margin-top: 44px; }
-        .prod-action-wrap { text-align: center; margin-top: 48px; }
+        .section-header {
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+          gap: 16px;
+          margin-bottom: 28px;
+        }
+        .section-header__link {
+          display: inline-flex; align-items: center; gap: 6px;
+          font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
+          text-transform: uppercase; color: var(--primary);
+          white-space: nowrap; flex-shrink: 0; padding-bottom: 4px;
+        }
+        .section-header__link:hover { color: var(--primary-dark); }
+        .prod-action-wrap { text-align: center; margin-top: 36px; }
         .hero-section { background: var(--primary); position: relative; overflow: hidden; min-height: 520px; display: flex; flex-direction: column; }
         .hero-section__inner { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 48px; padding-top: 72px; padding-bottom: 72px; flex: 1; }
         .hero-section__content .section-eyebrow { color: var(--gold-light); opacity: 0.9; }
@@ -394,42 +388,11 @@ export default function Home() {
         .promise-strip { background: var(--ivory); border-bottom: 1px solid var(--outline-variant); padding: 22px 0; }
         .promise-strip__inner { display: flex; align-items: center; justify-content: center; gap: 0; flex-wrap: wrap; }
         .promise-item { display: flex; align-items: center; gap: 10px; padding: 8px 32px; }
-        .promise-item__icon { color: var(--gold); flex-shrink: 0; }
+        .promise-item__icon { color: var(--primary); flex-shrink: 0; }
         .promise-item__text { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--on-surface-variant); white-space: nowrap; }
         .promise-sep { width: 1px; height: 28px; background: var(--outline-variant); }
-        .home-categories { background: var(--surface); }
-        .cat-grid { 
-          display: flex; 
-          flex-wrap: wrap; 
-          justify-content: center; 
-          gap: 24px; 
-        }
-        .cat-grid > div {
-          width: 100%;
-          max-width: 260px;
-          min-width: 200px;
-          flex: 1 1 220px;
-        }
-        .cat-card { display: flex; flex-direction: column; height: 100%; text-decoration: none; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--outline-variant); background: var(--ivory); transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
-        @media (hover: hover) and (pointer: fine) {
-          .cat-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--gold); }
-          .cat-card:hover .cat-card__img { transform: scale(1.05); }
-          .cat-card:hover .cat-card__arrow { opacity: 1; transform: translateX(0); }
-        }
-        .cat-card__img-wrap { position: relative; aspect-ratio: 4/3; background: var(--surface-container-low); overflow: hidden; }
-        .cat-card__img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
-        .cat-card__placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--primary-container); font-family: var(--font-serif); font-size: 48px; font-weight: 600; color: var(--primary); }
-        .cat-card__overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(74,13,24,0.18) 0%, transparent 60%); }
-        .cat-card__body { padding: 16px 18px; display: flex; align-items: center; gap: 8px; }
-        .cat-card__name { font-family: var(--font-serif); font-size: 17px; font-weight: 600; color: var(--on-surface); flex: 1; }
-        .cat-card__arrow { color: var(--primary); opacity: 0; transform: translateX(-4px); transition: opacity 0.25s ease, transform 0.25s ease; }
-        .home-products { background: var(--surface-container-lowest); }
-        .sort-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; flex-wrap: wrap; gap: 12px; }
-        .sort-bar__count { font-size: 13px; color: var(--on-surface-variant); font-weight: 500; }
-        .sort-bar__right { display: flex; align-items: center; gap: 10px; }
-        .sort-bar__label { font-size: 12px; color: var(--on-surface-variant); }
-        .sort-select { padding: 8px 14px; border-radius: var(--radius-sm); border: 1px solid var(--outline-variant); background: var(--ivory); color: var(--on-surface); font-family: var(--font-sans); font-size: 13px; cursor: pointer; outline: none; }
-        .product-skeleton { background: var(--ivory); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--outline-variant); }
+        .home-products { background: var(--surface); }
+        .product-skeleton { background: var(--ivory); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--outline-variant); flex: 0 0 calc((100% - 60px) / 4); }
         .product-skeleton__img { width: 100%; aspect-ratio: 4/5; }
         
         .story-section { background: var(--surface); padding: 80px 0; border-top: 1px solid var(--outline-variant); border-bottom: 1px solid var(--outline-variant); }
@@ -438,8 +401,8 @@ export default function Home() {
         .story-section__heading { font-family: var(--font-serif); font-size: clamp(32px, 4vw, 52px); font-weight: 600; line-height: 1.1; margin: 12px 0 20px; }
         .story-section__heading em { font-style: italic; color: var(--primary); }
         .story-section__body { font-size: 15px; color: var(--on-surface-variant); line-height: 1.8; max-width: 520px; margin-bottom: 32px; }
-        .story-section__deco { width: 280px; flex-shrink: 0; aspect-ratio: 4 / 3; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-md); background: #ffffff; border: 1px solid var(--outline-variant); }
-        .story-section__deco img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .story-section__deco { width: 280px; flex-shrink: 0; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-md); background: #ffffff; border: 1px solid var(--outline-variant); }
+        .story-section__deco img { width: 100%; height: auto; object-fit: contain; display: block; }
         .story-deco-svg { width: 100%; height: 100%; }
 
         .gifting-section { background: var(--primary); padding: 80px 0; }
@@ -448,12 +411,23 @@ export default function Home() {
         .gifting-section__sub { font-size: 13px; color: rgba(255,255,255,0.65); letter-spacing: 0.06em; margin-bottom: 36px; }
         .offers-section { background: var(--surface); }
 
-        /* Desktop: Exactly 4 columns in a clean grid */
+        /* Horizontal product rail at all widths */
         .desktop-grid-mobile-scroll {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
+          display: flex;
           gap: 20px;
+          overflow-x: auto;
+          scroll-snap-type: x mandatory;
+          padding-bottom: 12px;
+          scrollbar-width: none;
+          -webkit-overflow-scrolling: touch;
         }
+        .desktop-grid-mobile-scroll::-webkit-scrollbar { display: none; }
+        .desktop-grid-mobile-scroll > div {
+          flex: 0 0 calc((100% - 60px) / 4);
+          scroll-snap-align: start;
+        }
+
+        .home-contact { background: var(--surface-container-lowest); border-top: 1px solid var(--outline-variant); }
 
         /* Hide prices on home page product cards */
         .home-products [class*="price"],
@@ -464,6 +438,7 @@ export default function Home() {
         @media (max-width: 900px) {
           .hero-section__inner { grid-template-columns: 1fr; gap: 36px; padding-top: 52px; padding-bottom: 52px; }
           .hero-section__image-wrap { display: none; }
+          .desktop-grid-mobile-scroll > div { flex: 0 0 calc((100% - 40px) / 3); }
           
           /* Story section mobile reordering: Eyebrow -> Title -> Image -> Description */
           .story-section { padding: 40px 0; }
@@ -486,10 +461,9 @@ export default function Home() {
             margin: 0;
           }
           .story-item-image {
-            order: 3; 
+            order: 3;
             width: 100%;
             max-width: 280px;
-            aspect-ratio: 4 / 3;
             margin: 4px 0;
             flex-shrink: 0;
           }
@@ -506,29 +480,15 @@ export default function Home() {
           .promise-sep { display: none; }
           .promise-item { padding: 8px 18px; }
           .hero-section__heading { font-size: 36px; }
-          .cat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-          .cat-grid > div { max-width: none; min-width: 0; }
           .hero-section__ctas { flex-direction: column; align-items: flex-start; }
           .gifting-section__heading { font-size: 42px; }
-          .section-header { margin-bottom: 32px; }
-          .cat-action-wrap { margin-top: 28px; }
-          .prod-action-wrap { margin-top: 36px; }
+          .section-header { margin-bottom: 22px; }
+          .prod-action-wrap { margin-top: 28px; }
 
-          /* Mobile: Switch to single-card peeking horizontal swipe */
-          .desktop-grid-mobile-scroll {
-            display: flex;
-            gap: 16px;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            padding-bottom: 12px;
-            scrollbar-width: none;
-            -webkit-overflow-scrolling: touch;
-          }
-          .desktop-grid-mobile-scroll::-webkit-scrollbar {
-            display: none;
-          }
+          /* Mobile: single-card peeking swipe */
+          .desktop-grid-mobile-scroll { gap: 16px; }
           .desktop-grid-mobile-scroll > div {
-            flex: 0 0 82% !important;
+            flex: 0 0 72%;
             scroll-snap-align: center;
           }
         }

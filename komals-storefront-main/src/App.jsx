@@ -12,6 +12,7 @@ import Contact from './pages/Contact.jsx';
 import Terms from './pages/Terms.jsx';
 import PrivacyPolicy from './pages/PrivacyPolicy.jsx';
 import { useTrackVisit } from './lib/useTrackVisit.js';
+import Seo from './components/Seo.jsx';
 
 export default function App() {
   useTrackVisit();
@@ -19,11 +20,13 @@ export default function App() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Header />
+      <Seo description="Komal's Sweet Palace offers traditional Mangaluru sweets, halwas, chakkuli and savouries made with authentic recipes." />
       <main style={{ flex: 1 }}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/offers" element={<Offers />} />
           <Route path="/categories" element={<Categories />} />
+          <Route path="/products" element={<CategoryProducts />} />
           <Route path="/categories/:slug" element={<CategoryProducts />} />
           <Route path="/products/:slug" element={<ProductDetail />} />
           <Route path="/search" element={<SearchResults />} />

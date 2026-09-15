@@ -51,10 +51,10 @@ export default function Login() {
               boxShadow: 'var(--shadow-md)',
             }}
           >
-            J
+            K
           </div>
           <div style={{ textAlign: 'center' }}>
-            <h1 style={{ fontSize: 19, margin: 0 }}>Jmaart Admin</h1>
+            <h1 style={{ fontSize: 19, margin: 0 }}>Komal's Sweet Palace Admin</h1>
             <p style={{ margin: '4px 0 0', fontSize: 13, color: 'var(--on-surface-variant)' }}>Sign in to manage your store</p>
           </div>
         </div>
@@ -63,7 +63,7 @@ export default function Login() {
           <input
             id="username"
             type="text"
-            placeholder="admin"
+            placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             autoFocus

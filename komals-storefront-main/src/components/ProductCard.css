@@ -18,7 +18,7 @@
   .product-card:hover {
     transform: translateY(-6px);
     box-shadow: var(--shadow-lg);
-    border-color: var(--gold);
+    border-color: var(--outline);
   }
 }
 
@@ -78,7 +78,7 @@
 .product-card__hover-layer {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(74,13,24,0.55) 0%, transparent 55%);
+  background: linear-gradient(to top, rgba(26,20,22,0.55) 0%, transparent 55%);
   opacity: 0;
   transition: opacity 0.3s ease;
   display: flex;
@@ -132,7 +132,7 @@
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--gold-dark);
+  color: var(--on-surface-variant);
 }
 
 .product-card__title {

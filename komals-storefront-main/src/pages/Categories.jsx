@@ -90,21 +90,19 @@ export default function Categories() {
       <style>{`
         /* ── Category Page Header ── */
         .cats-page-header {
-          background: var(--primary);
+          background: var(--surface-container-lowest);
+          border-bottom: 1px solid var(--outline-variant);
           padding: 52px 0 48px;
-        }
-        .cats-page-header .section-eyebrow {
-          color: var(--gold-light);
         }
         .cats-page-header__title {
           font-family: var(--font-serif);
           font-size: clamp(30px, 4vw, 48px);
           font-weight: 600;
-          color: #fff;
+          color: var(--on-surface);
           margin: 10px 0 12px;
         }
         .cats-page-header__sub {
-          color: rgba(255,255,255,0.7);
+          color: var(--on-surface-variant);
           font-size: 14px;
           margin-top: 16px;
           max-width: 460px;
@@ -132,7 +130,7 @@ export default function Categories() {
           .cat-page-card:hover {
             transform: translateY(-6px);
             box-shadow: var(--shadow-lg);
-            border-color: var(--gold);
+            border-color: var(--outline);
           }
         }
         .cat-page-card__img-wrap {
@@ -167,7 +165,7 @@ export default function Categories() {
         .cat-page-card__overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(to top, rgba(74,13,24,0.12) 0%, transparent 60%);
+          background: linear-gradient(to top, rgba(26,20,22,0.12) 0%, transparent 60%);
         }
         .cat-page-card__body {
           padding: 18px 20px;

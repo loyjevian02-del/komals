@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
 import { api, imageUrl } from '../lib/api.js';
 import { unitLabel } from '../lib/unit.js';
+import Seo from '../components/Seo.jsx';
 
 export default function ProductDetail() {
   const { slug } = useParams();
@@ -36,7 +37,7 @@ export default function ProductDetail() {
     else navigate('/');
   }
 
-  /* ── Loading State ── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ Loading State Ã¢â€â‚¬Ã¢â€â‚¬ */
   if (loading) {
     return (
       <div className="pdp-loading-wrap">
@@ -56,7 +57,7 @@ export default function ProductDetail() {
     );
   }
 
-  /* ── Not Found ── */
+  /* Ã¢â€â‚¬Ã¢â€â‚¬ Not Found Ã¢â€â‚¬Ã¢â€â‚¬ */
   if (notFound || !product) {
     return (
       <div className="container" style={{ padding: '80px 24px', textAlign: 'center' }}>
@@ -83,9 +84,18 @@ export default function ProductDetail() {
   const discountPct = hasDiscount
     ? Math.round(100 - (product.price / product.compareAtPrice) * 100)
     : null;
+  const seoTitle = product.seoTitle || `${product.title} in Mangaluru`;
+  const seoDescription = product.seoDescription || product.description || `Enquire about ${product.title} from Komal's Sweet Palace in Mangaluru.`;
+  const productSchema = {
+    '@context': 'https://schema.org', '@type': 'Product', name: product.title,
+    description: seoDescription, sku: product.partNo,
+    brand: { '@type': 'Brand', name: "Komal's Sweet Palace" },
+    image: images.filter(Boolean).map(imageUrl),
+  };
 
   return (
     <div>
+      <Seo title={seoTitle} description={seoDescription} schema={productSchema} />
       {/* Breadcrumb/Back */}
       <div className="pdp-breadcrumb">
         <div className="container">
@@ -94,11 +104,11 @@ export default function ProductDetail() {
           </button>
           {product.categoryName && (
             <>
-              <span className="pdp-breadcrumb__sep">·</span>
+              <span className="pdp-breadcrumb__sep">Ã‚Â·</span>
               <Link to={`/categories/${product.categorySlug}`} className="pdp-breadcrumb__link">
                 {product.categoryName}
               </Link>
-              <span className="pdp-breadcrumb__sep">·</span>
+              <span className="pdp-breadcrumb__sep">Ã‚Â·</span>
               <span className="pdp-breadcrumb__current">{product.title}</span>
             </>
           )}
@@ -108,7 +118,7 @@ export default function ProductDetail() {
       <div className="container pdp-container">
         <div className="pdp-grid">
 
-          {/* ── Left: Image Gallery ── */}
+          {/* Ã¢â€â‚¬Ã¢â€â‚¬ Left: Image Gallery Ã¢â€â‚¬Ã¢â€â‚¬ */}
           <div className="pdp-gallery">
             {/* Main Image */}
             <div className="pdp-gallery__main">
@@ -152,7 +162,7 @@ export default function ProductDetail() {
             )}
           </div>
 
-          {/* ── Right: Product Info ── */}
+          {/* Ã¢â€â‚¬Ã¢â€â‚¬ Right: Product Info Ã¢â€â‚¬Ã¢â€â‚¬ */}
           <div className="pdp-info">
             {/* Category label */}
             {product.categoryName && (
@@ -173,14 +183,14 @@ export default function ProductDetail() {
             {/* Price
             <div className="pdp-info__price-wrap">
               <span className="pdp-info__price">
-                ₹{Number(product.price).toFixed(2)}
+                Ã¢â€šÂ¹{Number(product.price).toFixed(2)}
                 {unit && (
                   <span className="pdp-info__unit"> / {unit}</span>
                 )}
               </span>
               {hasDiscount && (
                 <span className="pdp-info__compare">
-                  ₹{Number(product.compareAtPrice).toFixed(2)}
+                  Ã¢â€šÂ¹{Number(product.compareAtPrice).toFixed(2)}
                 </span>
               )}
             </div> */}
@@ -205,16 +215,16 @@ export default function ProductDetail() {
 
             {/* Subtle assurance */}
             <div className="pdp-assurance">
-              <span>✦ Handcrafted Daily</span>
-              <span>✦ Pure Ingredients</span>
-              <span>✦ Freshly Packed</span>
+              <span>Ã¢Å“Â¦ Handcrafted Daily</span>
+              <span>Ã¢Å“Â¦ Pure Ingredients</span>
+              <span>Ã¢Å“Â¦ Freshly Packed</span>
             </div>
           </div>
         </div>
       </div>
 
       <style>{`
-        /* ── Loading ── */
+        /* Ã¢â€â‚¬Ã¢â€â‚¬ Loading Ã¢â€â‚¬Ã¢â€â‚¬ */
         .pdp-loading-wrap {
           padding: 48px 0 80px;
         }
@@ -234,7 +244,7 @@ export default function ProductDetail() {
           padding-top: 8px;
         }
 
-        /* ── Not Found ── */
+        /* Ã¢â€â‚¬Ã¢â€â‚¬ Not Found Ã¢â€â‚¬Ã¢â€â‚¬ */
         .pdp-notfound-icon {
           width: 80px;
           height: 80px;
@@ -255,7 +265,7 @@ export default function ProductDetail() {
           line-height: 1.7;
         }
 
-        /* ── Breadcrumb ── */
+        /* Ã¢â€â‚¬Ã¢â€â‚¬ Breadcrumb Ã¢â€â‚¬Ã¢â€â‚¬ */
         .pdp-breadcrumb {
           background: var(--surface-container-low);
           border-bottom: 1px solid var(--outline-variant);
@@ -303,7 +313,7 @@ export default function ProductDetail() {
           max-width: 200px;
         }
 
-        /* ── Layout ── */
+        /* Ã¢â€â‚¬Ã¢â€â‚¬ Layout Ã¢â€â‚¬Ã¢â€â‚¬ */
         .pdp-container {
           padding-top: 40px;
           padding-bottom: 80px;
@@ -315,7 +325,7 @@ export default function ProductDetail() {
           align-items: start;
         }
 
-        /* ── Gallery ── */
+        /* Ã¢â€â‚¬Ã¢â€â‚¬ Gallery Ã¢â€â‚¬Ã¢â€â‚¬ */
         .pdp-gallery {
           position: sticky;
           top: 90px;
@@ -385,11 +395,11 @@ export default function ProductDetail() {
           border-color: var(--outline);
         }
         .pdp-gallery__thumb--active {
-          border-color: var(--gold) !important;
-          box-shadow: 0 0 0 1px var(--gold);
+          border-color: var(--primary) !important;
+          box-shadow: 0 0 0 1px var(--primary);
         }
 
-        /* ── Info ── */
+        /* Ã¢â€â‚¬Ã¢â€â‚¬ Info Ã¢â€â‚¬Ã¢â€â‚¬ */
         .pdp-info__category {
           display: inline-block;
           font-family: var(--font-sans);
@@ -397,7 +407,7 @@ export default function ProductDetail() {
           font-weight: 700;
           letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: var(--gold-dark);
+          color: var(--on-surface-variant);
           margin-bottom: 14px;
           text-decoration: none;
           transition: color 0.2s;
@@ -414,7 +424,7 @@ export default function ProductDetail() {
         .pdp-info__divider {
           width: 48px;
           height: 1.5px;
-          background: var(--gold);
+          background: var(--primary);
           margin: 18px 0;
         }
         .pdp-info__price-wrap {
@@ -487,7 +497,7 @@ export default function ProductDetail() {
           color: var(--on-surface-variant);
         }
 
-        /* ── Responsive ── */
+        /* Ã¢â€â‚¬Ã¢â€â‚¬ Responsive Ã¢â€â‚¬Ã¢â€â‚¬ */
         @media (max-width: 820px) {
           .pdp-grid {
             grid-template-columns: 1fr;

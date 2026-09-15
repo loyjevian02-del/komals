@@ -11,10 +11,10 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.jmaart</groupId>
+    <groupId>com.komals</groupId>
     <artifactId>catalog-backend</artifactId>
     <version>0.0.1</version>
-    <name>jmaart-catalog-backend</name>
+    <name>komals-catalog-backend</name>
     <description>Jayalakshmi Hyper Market - product catalog backend (no cart/checkout)</description>
 
     <properties>

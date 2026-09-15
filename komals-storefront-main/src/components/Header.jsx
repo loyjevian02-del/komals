@@ -66,7 +66,7 @@ export default function Header() {
     setMenuOpen(false);
     if (location.pathname === '/') {
       e.preventDefault();
-      const el = document.getElementById('our-story');
+      const el = document.getElementById('about-us') || document.getElementById('our-story');
       if (el) {
         el.scrollIntoView({ behavior: 'smooth' });
       }
@@ -110,9 +110,8 @@ export default function Header() {
           {/* ── Desktop Nav ── */}
           <nav className="ksp-nav" aria-label="Main navigation">
             <Link to="/" className={`ksp-nav__link${isActive('/') ? ' ksp-nav__link--active' : ''}`}>Home</Link>
-            <Link to="/categories" className={`ksp-nav__link${isActive('/categories') ? ' ksp-nav__link--active' : ''}`}>Assortment</Link>
-            <Link to="/#our-story" onClick={handleStoryClick} className="ksp-nav__link">Our Story</Link>
-            {/* <Link to="/offers" className={`ksp-nav__link${isActive('/offers') ? ' ksp-nav__link--active' : ''}`}>Offers</Link> */}
+            <Link to="/categories" className={`ksp-nav__link${isActive('/categories') || isActive('/products') ? ' ksp-nav__link--active' : ''}`}>Products</Link>
+            <Link to="/#our-story" onClick={handleStoryClick} className="ksp-nav__link">About us</Link>
             <Link to="/contact" className={`ksp-nav__link${isActive('/contact') ? ' ksp-nav__link--active' : ''}`}>Contact</Link>
           </nav>
 
@@ -187,13 +186,12 @@ export default function Header() {
             <Link to="/" className={`ksp-mobile-menu__link${isActive('/') ? ' ksp-mobile-menu__link--active' : ''}`} onClick={() => setMenuOpen(false)}>
               Home
             </Link>
-            <Link to="/categories" className={`ksp-mobile-menu__link${isActive('/categories') ? ' ksp-mobile-menu__link--active' : ''}`} onClick={() => setMenuOpen(false)}>
-              Assortment
+            <Link to="/categories" className={`ksp-mobile-menu__link${isActive('/categories') || isActive('/products') ? ' ksp-mobile-menu__link--active' : ''}`} onClick={() => setMenuOpen(false)}>
+              Products
             </Link>
-            <Link to="/#our-story" onClick={handleStoryClick} className="ksp-mobile-menu__link">Our Story</Link>
-            {/* <Link to="/offers" className={`ksp-mobile-menu__link${isActive('/offers') ? ' ksp-mobile-menu__link--active' : ''}`} onClick={() => setMenuOpen(false)}>
-              Offers
-            </Link> */}
+            <Link to="/#our-story" onClick={handleStoryClick} className="ksp-mobile-menu__link">
+              About us
+            </Link>
             <Link to="/contact" className={`ksp-mobile-menu__link${isActive('/contact') ? ' ksp-mobile-menu__link--active' : ''}`} onClick={() => setMenuOpen(false)}>
               Contact
             </Link>
@@ -227,11 +225,12 @@ export default function Header() {
           position: sticky;
           top: 0;
           z-index: 100;
-          background: var(--primary);
+          background: var(--surface-container-lowest);
+          border-bottom: 1px solid var(--outline-variant);
           transition: box-shadow 0.3s ease;
         }
         .ksp-header--scrolled {
-          box-shadow: 0 2px 20px rgba(74, 13, 24, 0.35);
+          box-shadow: var(--shadow-sm);
         }
 
         .ksp-header__inner {
@@ -251,11 +250,10 @@ export default function Header() {
 }
 
 .ksp-logo__img {
-  height: 48px; /* Adjust height as needed */
+  height: 40px;
   width: auto; /* Crucial: This allows the width to scale proportionally */
   object-fit: contain;
-  border-radius: 0; /* Remove the circular mask */
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); /* Add a subtle drop shadow for depth */
+  border-radius: 0;
   transition: transform 0.3s ease;
 }
 
@@ -273,11 +271,8 @@ export default function Header() {
           font-family: var(--font-serif);
           font-size: 21px;
           font-weight: 700;
-          background: linear-gradient(135deg, #fff 30%, var(--gold-light, #f3e5ab) 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          letter-spacing: 0.04em;
-          filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+          color: var(--primary);
+          letter-spacing: 0.02em;
           white-space: nowrap;
         }
 
@@ -294,7 +289,7 @@ export default function Header() {
           font-weight: 500;
           letter-spacing: 0.1em;
           text-transform: uppercase;
-          color: rgba(255,255,255,0.82);
+          color: var(--on-surface-variant);
           padding: 8px 14px;
           border-radius: 4px;
           position: relative;
@@ -309,17 +304,18 @@ export default function Header() {
           transform: translateX(-50%) scaleX(0);
           width: 18px;
           height: 1.5px;
-          background: var(--gold);
+          background: var(--primary);
           transition: transform 0.25s ease;
         }
         .ksp-nav__link:hover {
-          color: #fff;
+          color: var(--on-surface);
         }
         .ksp-nav__link:hover::after {
           transform: translateX(-50%) scaleX(1);
         }
         .ksp-nav__link--active {
-          color: #fff;
+          color: var(--primary);
+          font-weight: 600;
         }
         .ksp-nav__link--active::after {
           transform: translateX(-50%) scaleX(1);
@@ -336,19 +332,20 @@ export default function Header() {
           width: 36px;
           height: 36px;
           border-radius: 50%;
-          border: 1px solid rgba(255,255,255,0.22);
-          background: rgba(255,255,255,0.08);
-          color: rgba(255,255,255,0.9);
+          border: 1px solid var(--outline-variant);
+          background: transparent;
+          color: var(--on-surface-variant);
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          transition: background 0.2s, color 0.2s;
+          transition: background 0.2s, color 0.2s, border-color 0.2s;
           text-decoration: none;
         }
         .ksp-icon-btn:hover {
-          background: rgba(255,255,255,0.18);
-          color: #fff;
+          background: var(--surface-container-low);
+          border-color: var(--outline);
+          color: var(--primary);
         }
 
         /* ── Hamburger (mobile only) ── */
@@ -357,8 +354,8 @@ export default function Header() {
           width: 40px;
           height: 40px;
           border: none;
-          background: rgba(255,255,255,0.08);
-          color: #fff;
+          background: transparent;
+          color: var(--on-surface);
           border-radius: 8px;
           align-items: center;
           justify-content: center;
@@ -369,8 +366,8 @@ export default function Header() {
 
         /* ── Search Bar (slide-down) ── */
         .ksp-search-bar {
-          background: var(--primary-dark);
-          border-top: 1px solid rgba(255,255,255,0.1);
+          background: var(--surface-container-lowest);
+          border-top: 1px solid var(--outline-variant);
           padding: 12px 0;
           animation: slideDown 0.2s ease;
         }
@@ -385,7 +382,7 @@ export default function Header() {
           max-width: 640px;
         }
         .ksp-search-bar__icon {
-          color: rgba(255,255,255,0.6);
+          color: var(--on-surface-variant);
           flex-shrink: 0;
         }
         .ksp-search-bar__input {
@@ -393,18 +390,18 @@ export default function Header() {
           background: none;
           border: none;
           outline: none;
-          color: #fff;
+          color: var(--on-surface);
           font-family: var(--font-sans);
           font-size: 15px;
           min-width: 0;
         }
         .ksp-search-bar__input::placeholder {
-          color: rgba(255,255,255,0.5);
+          color: var(--on-surface-variant);
         }
         .ksp-search-bar__clear {
           background: none;
           border: none;
-          color: rgba(255,255,255,0.6);
+          color: var(--on-surface-variant);
           display: flex;
           align-items: center;
           cursor: pointer;
@@ -418,13 +415,13 @@ export default function Header() {
         .ksp-mobile-menu {
           display: none;
           flex-direction: column;
-          background: var(--primary-dark);
+          background: var(--surface-container-lowest);
           padding: 8px 0 20px;
-          border-top: 1px solid rgba(255,255,255,0.08);
+          border-bottom: 1px solid var(--outline-variant);
           position: sticky;
           top: 68px;
           z-index: 99;
-          box-shadow: 0 8px 24px rgba(74,13,24,0.4);
+          box-shadow: var(--shadow-md);
         }
         .ksp-mobile-menu__link {
           display: block;
@@ -432,44 +429,44 @@ export default function Header() {
           font-weight: 500;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          color: rgba(255,255,255,0.82);
+          color: var(--on-surface-variant);
           padding: 13px 24px;
-          border-bottom: 1px solid rgba(255,255,255,0.06);
+          border-bottom: 1px solid var(--outline-variant);
           transition: color 0.15s ease, background 0.15s ease;
         }
         .ksp-mobile-menu__link:hover,
         .ksp-mobile-menu__link--active {
-          color: #fff;
-          background: rgba(255,255,255,0.06);
+          color: var(--primary);
+          background: var(--surface-container-low);
         }
         .ksp-mobile-menu__search {
           display: flex;
           align-items: center;
           gap: 10px;
           margin: 14px 20px 0;
-          background: rgba(255,255,255,0.1);
-          border: 1px solid rgba(255,255,255,0.15);
+          background: var(--surface-container-low);
+          border: 1px solid var(--outline-variant);
           border-radius: var(--radius-sm);
           padding: 10px 14px;
-          color: rgba(255,255,255,0.7);
+          color: var(--on-surface-variant);
         }
         .ksp-mobile-menu__search input {
           flex: 1;
           background: none;
           border: none;
           outline: none;
-          color: #fff;
+          color: var(--on-surface);
           font-family: var(--font-sans);
           font-size: 14px;
           min-width: 0;
         }
         .ksp-mobile-menu__search input::placeholder {
-          color: rgba(255,255,255,0.5);
+          color: var(--on-surface-variant);
         }
         .ksp-mobile-menu__search button {
           background: none;
           border: none;
-          color: rgba(255,255,255,0.6);
+          color: var(--on-surface-variant);
           display: flex;
           align-items: center;
           cursor: pointer;
@@ -480,7 +477,7 @@ export default function Header() {
           gap: 8px;
           margin: 14px 20px 0;
           font-size: 13px;
-          color: var(--gold-light);
+          color: var(--primary);
         }
 
         /* ── Responsive ── */
