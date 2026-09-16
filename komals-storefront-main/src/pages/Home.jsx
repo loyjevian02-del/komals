@@ -217,7 +217,7 @@ export default function Home() {
             <div className="section-header">
               <div>
                 <span className="section-eyebrow">Our Signature</span>
-                <h2 className="section-heading">Assortments Galore</h2>
+                <h2 className="section-heading">Our Sweet Picks</h2>
               </div>
               <Link to="/products" className="section-header__link">View all <ArrowRight size={14} /></Link>
             </div>

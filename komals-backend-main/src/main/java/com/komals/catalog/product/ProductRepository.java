@@ -22,6 +22,8 @@ public interface ProductRepository extends JpaRepository<Product, String>, JpaSp
 
     List<Product> findAllByActiveTrueAndCategory_SlugOrderByTitleAsc(String categorySlug);
 
+    boolean existsByActiveTrueAndCategory_Id(String categoryId);
+
     List<Product> findAllByActiveTrueOrderByTitleAsc();
 
     @Query("select p from Product p where p.active = true and lower(p.title) like lower(concat('%', :q, '%'))")
