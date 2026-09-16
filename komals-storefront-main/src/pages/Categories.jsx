@@ -67,7 +67,7 @@ export default function Categories() {
                     />
                   ) : (
                     <div className="cat-page-card__placeholder">
-                      <span>{cat.name[0]}</span>
+                      <span>{cat.name?.[0] || '?'}</span>
                     </div>
                   )}
                   <div className="cat-page-card__overlay" />

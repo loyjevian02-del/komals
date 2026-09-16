@@ -132,7 +132,7 @@ export default function ProductDetail() {
                 />
               ) : (
                 <div className="pdp-gallery__no-image">
-                  <span>{product.title[0]}</span>
+                  <span>{product.title?.[0] || '?'}</span>
                 </div>
               )}
               {discountPct && (
@@ -156,7 +156,7 @@ export default function ProductDetail() {
                     {img ? (
                       <img src={imageUrl(img)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     ) : (
-                      <span style={{ fontSize: 20, color: 'var(--primary)' }}>{product.title[0]}</span>
+                      <span style={{ fontSize: 20, color: 'var(--primary)' }}>{product.title?.[0] || '?'}</span>
                     )}
                   </button>
                 ))}

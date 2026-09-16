@@ -21,7 +21,7 @@ export default function ProductCard({ product }) {
           />
         ) : (
           <div className="product-card__no-image" aria-hidden="true">
-            <span>{product.title[0]}</span>
+            <span>{product.title?.[0] || '?'}</span>
           </div>
         )}
         {/* Hover overlay */}

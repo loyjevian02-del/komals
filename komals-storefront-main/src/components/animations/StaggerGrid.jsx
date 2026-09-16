@@ -40,8 +40,7 @@ export default function StaggerGrid({
       style={style}
       variants={container}
       initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: '-40px 0px' }}
+      animate="show"
     >
       {React.Children.map(children, (child) => {
         if (!child) return null;

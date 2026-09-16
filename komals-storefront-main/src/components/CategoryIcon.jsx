@@ -9,7 +9,7 @@ export default function CategoryIcon({ category, fallbackStyle, coverMode = fals
   if (!category.image) {
     return (
       <span style={{ fontWeight: 700, color: 'var(--outline)', ...fallbackStyle }}>
-        {category.name[0]}
+        {category.name?.[0] || '?'}
       </span>
     );
   }
