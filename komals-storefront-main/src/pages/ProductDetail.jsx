@@ -183,14 +183,14 @@ export default function ProductDetail() {
             {/* Price
             <div className="pdp-info__price-wrap">
               <span className="pdp-info__price">
-                Ã¢â€šÂ¹{Number(product.price).toFixed(2)}
+                &#8377;{Number(product.price).toFixed(2)}
                 {unit && (
                   <span className="pdp-info__unit"> / {unit}</span>
                 )}
               </span>
               {hasDiscount && (
                 <span className="pdp-info__compare">
-                  Ã¢â€šÂ¹{Number(product.compareAtPrice).toFixed(2)}
+                  &#8377;{Number(product.compareAtPrice).toFixed(2)}
                 </span>
               )}
             </div> */}
@@ -215,9 +215,9 @@ export default function ProductDetail() {
 
             {/* Subtle assurance */}
             <div className="pdp-assurance">
-              <span>Ã¢Å“Â¦ Handcrafted Daily</span>
-              <span>Ã¢Å“Â¦ Pure Ingredients</span>
-              <span>Ã¢Å“Â¦ Freshly Packed</span>
+              <span>&#10022; Handcrafted Daily</span>
+              <span>&#10022; Pure Ingredients</span>
+              <span>&#10022; Freshly Packed</span>
             </div>
           </div>
         </div>

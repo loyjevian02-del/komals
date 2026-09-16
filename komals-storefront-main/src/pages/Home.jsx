@@ -278,7 +278,7 @@ export default function Home() {
                   )}
                 </h2>
                 <p className="story-section__body story-item-body">
-                  {settings?.storyBody ?? "Komal's Sweet Palace has been a part of your celebrations for generations. From our humble beginnings to today, we continue to craft sweets that bring people together Ã¢â‚¬â€ because every moment deserves something sweet."}
+                  {settings?.storyBody ?? "Komal's Sweet Palace has been a part of your celebrations for generations. From our humble beginnings to today, we continue to craft sweets that bring people together — because every moment deserves something sweet."}
                 </p>
               </div>
 
