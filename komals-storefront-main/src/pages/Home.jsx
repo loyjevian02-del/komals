@@ -206,7 +206,7 @@ export default function Home() {
       <section className="promise-strip" aria-label="Brand promises">
         <div className="container">
           <div className="promise-strip__inner">
-            <span className="promise-item__text">Traditional Ã¢â‚¬Â¢ Authentic Ã¢â‚¬Â¢ Fresh Ã¢â‚¬Â¢ Premium</span>
+            <span className="promise-item__text">Traditional &bull; Authentic &bull; Fresh &bull; Premium</span>
           </div>
         </div>
       </section>
