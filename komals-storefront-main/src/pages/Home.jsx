@@ -315,19 +315,6 @@ export default function Home() {
       </Reveal>
 
       <Reveal>
-        <section className="section" style={{ background: 'var(--surface-container-low)' }} aria-labelledby="faq-heading">
-          <div className="container" style={{ maxWidth: 900 }}>
-            <span className="section-eyebrow">Helpful answers</span>
-            <h2 id="faq-heading" className="section-heading">Mangaluru sweets FAQs</h2>
-            <div style={{ display: 'grid', gap: 18, color: 'var(--on-surface-variant)', lineHeight: 1.7 }}>
-              <div><h3 style={{ color: 'var(--on-surface)', marginBottom: 6 }}>What can I find at Komal&apos;s Sweet Palace?</h3><p>Explore traditional sweets, halwas, chakkuli and savouries. Availability changes with fresh preparation, so check the catalogue for current products.</p></div>
-              <div><h3 style={{ color: 'var(--on-surface)', marginBottom: 6 }}>Do you take bulk or gifting enquiries?</h3><p>Yes. Contact us for celebrations, festivals, office gifting and other bulk requirements. We&apos;ll help you choose suitable products and quantities.</p></div>
-              <div><h3 style={{ color: 'var(--on-surface)', marginBottom: 6 }}>Is Mangalore the same as Mangaluru?</h3><p>Yes. Mangaluru is the official name of Mangalore. We use both names so customers can find traditional local sweets using the terms they know.</p></div>
-            </div>
-          </div>
-        </section>
-      </Reveal>
-      <Reveal>
         <section id="contact" className="section home-contact" aria-label="Contact">
           <div className="container">
             <div className="section-header">
