@@ -166,17 +166,12 @@ export default function Home() {
           {offers.length > 0 ? (
             <OfferCarousel offers={offers} />
           ) : (
-            <motion.img
-              initial={{ opacity: 0, scale: 1.05 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-              src="/komals-banner.png"
-              alt="Komal's Sweet Palace"
+            <div
               style={{
                 width: '100%',
-                display: 'block',
+                aspectRatio: '16 / 7',
                 borderRadius: 'var(--radius)',
-                objectFit: 'cover',
+                background: 'var(--surface-container-low)',
               }}
             />
           )}
