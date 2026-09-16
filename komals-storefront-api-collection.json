@@ -1,0 +1,388 @@
+{
+  "info": {
+    "_postman_id": "9b1d7f42-45e8-4663-b1d9-81a6c4293f01",
+    "name": "Komal's Sweet Palace - Storefront APIs",
+    "description": "Postman Collection for all public Storefront APIs of Komal's Sweet Palace. Covers Settings, Categories, Products, Offers, Analytics tracking, and Media assets.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.komalsweeetpalace.in",
+      "type": "string",
+      "description": "Base API URL for Komal's Sweet Palace backend"
+    },
+    {
+      "key": "visitorId",
+      "value": "vis_storefront_demo_101",
+      "type": "string",
+      "description": "Unique client visitor ID generated for session tracking (X-Visitor-Id header)"
+    }
+  ],
+  "item": [
+    {
+      "name": "Store Settings",
+      "item": [
+        {
+          "name": "Get Store Settings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/store/settings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "store",
+                "settings"
+              ]
+            },
+            "description": "Retrieves public storefront site configuration, including store name, tagline, announcement banner, contact numbers, email, WhatsApp numbers, address, and social links."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "List Active Categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/store/categories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "store",
+                "categories"
+              ]
+            },
+            "description": "Returns all active categories sorted by rank in ascending order."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Category by Slug",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/store/categories/:slug",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "store",
+                "categories",
+                ":slug"
+              ],
+              "variable": [
+                {
+                  "key": "slug",
+                  "value": "traditional-sweets",
+                  "description": "URL slug of the category"
+                }
+              ]
+            },
+            "description": "Fetches a single active category by its slug identifier."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "List / Search Products (Paginated)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/store/products?category=&q=&page=0&size=20&sort=title,asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "store",
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "",
+                  "description": "Optional category slug filter (e.g. 'halwa', 'sweets')"
+                },
+                {
+                  "key": "q",
+                  "value": "",
+                  "description": "Optional search term across title, partNo, description, keywords, category"
+                },
+                {
+                  "key": "page",
+                  "value": "0",
+                  "description": "Zero-indexed page number (default 0)"
+                },
+                {
+                  "key": "size",
+                  "value": "20",
+                  "description": "Page size limit between 1 and 100 (default 20)"
+                },
+                {
+                  "key": "sort",
+                  "value": "title,asc",
+                  "description": "Sorting criteria: 'title,asc', 'title,desc', 'price,asc', 'price,desc', 'createdAt,desc'"
+                }
+              ]
+            },
+            "description": "Retrieves paginated active products with support for full-text search, category filtering, and sorting."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product by Slug / ID / PartNo",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/store/products/:slug",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "store",
+                "products",
+                ":slug"
+              ],
+              "variable": [
+                {
+                  "key": "slug",
+                  "value": "wheat-halwa",
+                  "description": "Product slug, UUID, or Part Number"
+                }
+              ]
+            },
+            "description": "Retrieves complete product details for storefront display by slug, UUID ID, or Part Number."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Offers",
+      "item": [
+        {
+          "name": "List Active Offers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/store/offers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "store",
+                "offers"
+              ]
+            },
+            "description": "Fetches all active marketing offers and banner promotions ordered by rank."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "Record Page Visit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"path\": \"/products\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/store/analytics/visit",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "store",
+                "analytics",
+                "visit"
+              ]
+            },
+            "description": "Sends page visit analytics telemetry from the storefront."
+          },
+          "response": []
+        },
+        {
+          "name": "Record Search Query",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-Visitor-Id",
+                "value": "{{visitorId}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"halwa\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/store/analytics/search",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "store",
+                "analytics",
+                "search"
+              ]
+            },
+            "description": "Tracks customer search queries with visitor ID for analytics and search trend insights."
+          },
+          "response": []
+        },
+        {
+          "name": "Record Product View",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-Visitor-Id",
+                "value": "{{visitorId}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"sample-product-id\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/store/analytics/product-view",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "store",
+                "analytics",
+                "product-view"
+              ]
+            },
+            "description": "Records product page views linked to the unique visitor ID."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Media Assets",
+      "item": [
+        {
+          "name": "Get Uploaded Image / Asset",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/uploads/:filename",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "uploads",
+                ":filename"
+              ],
+              "variable": [
+                {
+                  "key": "filename",
+                  "value": "sample-image.jpg",
+                  "description": "Image filename stored in uploads directory"
+                }
+              ]
+            },
+            "description": "Fetches a publicly uploaded image, product photo, or banner asset."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

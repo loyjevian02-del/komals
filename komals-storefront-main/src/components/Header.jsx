@@ -110,7 +110,7 @@ export default function Header() {
           {/* ── Desktop Nav ── */}
           <nav className="ksp-nav" aria-label="Main navigation">
             <Link to="/" className={`ksp-nav__link${isActive('/') ? ' ksp-nav__link--active' : ''}`}>Home</Link>
-            <Link to="/categories" className={`ksp-nav__link${isActive('/categories') || isActive('/products') ? ' ksp-nav__link--active' : ''}`}>Products</Link>
+            <Link to="/products" className={`ksp-nav__link${isActive('/categories') || isActive('/products') ? ' ksp-nav__link--active' : ''}`}>Products</Link>
             <Link to="/#our-story" onClick={handleStoryClick} className="ksp-nav__link">About us</Link>
             <Link to="/contact" className={`ksp-nav__link${isActive('/contact') ? ' ksp-nav__link--active' : ''}`}>Contact</Link>
           </nav>
@@ -186,7 +186,7 @@ export default function Header() {
             <Link to="/" className={`ksp-mobile-menu__link${isActive('/') ? ' ksp-mobile-menu__link--active' : ''}`} onClick={() => setMenuOpen(false)}>
               Home
             </Link>
-            <Link to="/categories" className={`ksp-mobile-menu__link${isActive('/categories') || isActive('/products') ? ' ksp-mobile-menu__link--active' : ''}`} onClick={() => setMenuOpen(false)}>
+            <Link to="/products" className={`ksp-mobile-menu__link${isActive('/categories') || isActive('/products') ? ' ksp-mobile-menu__link--active' : ''}`} onClick={() => setMenuOpen(false)}>
               Products
             </Link>
             <Link to="/#our-story" onClick={handleStoryClick} className="ksp-mobile-menu__link">
