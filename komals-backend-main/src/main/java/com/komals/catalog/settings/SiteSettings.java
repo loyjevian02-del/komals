@@ -42,5 +42,13 @@ public class SiteSettings extends BaseEntity {
 
     @Column(columnDefinition = "text")
     private String storyBody;
-    private String storyImage; 
+    private String storyImage;
+
+    /** Full HTML body of the Terms & Conditions page, editable from the admin panel. */
+    @Column(columnDefinition = "text")
+    private String termsContent;
+
+    /** Full HTML body of the Privacy Policy page, editable from the admin panel. */
+    @Column(columnDefinition = "text")
+    private String privacyContent;
 }

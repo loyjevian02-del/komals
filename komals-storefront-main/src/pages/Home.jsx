@@ -203,15 +203,17 @@ export default function Home() {
         <div className="hero-section__gold-line" />
       </section> */}
 
-      <section className="promise-strip" aria-label="Brand promises">
-        <div className="container">
-          <div className="promise-strip__inner">
-            <span className="promise-item__text">Traditional &bull; Authentic &bull; Fresh &bull; Premium</span>
+      <Reveal direction="fade" delay={0.05}>
+        <section className="promise-strip" aria-label="Brand promises">
+          <div className="container">
+            <div className="promise-strip__inner">
+              <span className="promise-item__text">Traditional &bull; Authentic &bull; Fresh &bull; Premium</span>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </Reveal>
 
-      <Reveal>
+      <Reveal direction="up">
         <section className="section home-products" aria-label="Featured products">
           <div className="container">
             <div className="section-header">
@@ -245,8 +247,8 @@ export default function Home() {
                   <motion.div
                     key={p.id}
                     variants={{
-                      hidden: { opacity: 0, y: 25 },
-                      visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
+                      hidden: { opacity: 0, y: 30, filter: 'blur(4px)', scale: 0.98 },
+                      visible: { opacity: 1, y: 0, filter: 'blur(0px)', scale: 1, transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] } },
                     }}
                   >
                     <ProductCard product={p} />

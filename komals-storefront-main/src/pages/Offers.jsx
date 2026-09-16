@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api, imageUrl } from '../lib/api.js';
+import Reveal from '../components/animations/Reveal.jsx';
+import StaggerGrid from '../components/animations/StaggerGrid.jsx';
 
 export default function Offers() {
   const [offers, setOffers] = useState([]);
@@ -15,13 +17,15 @@ export default function Offers() {
   return (
     <div>
       {/* Page Header */}
-      <div className="offers-page-header">
-        <div className="container">
-          <span className="section-eyebrow">Exclusive</span>
-          <h1 className="offers-page-header__title">Offers & Promotions</h1>
-          <div style={{ width: 48, height: 1.5, background: 'var(--primary)', marginTop: 14, opacity: 0.5 }} />
+      <Reveal>
+        <div className="offers-page-header">
+          <div className="container">
+            <span className="section-eyebrow">Exclusive</span>
+            <h1 className="offers-page-header__title">Offers & Promotions</h1>
+            <div style={{ width: 48, height: 1.5, background: 'var(--primary)', marginTop: 14, opacity: 0.5 }} />
+          </div>
         </div>
-      </div>
+      </Reveal>
 
       <div className="container" style={{ padding: '48px 24px 80px' }}>
         {loading ? (
@@ -52,7 +56,7 @@ export default function Offers() {
             </p>
           </div>
         ) : (
-          <div className="offers-grid">
+          <StaggerGrid className="offers-grid">
             {offers.map((offer) => (
               <div key={offer.id} className="offer-card">
                 {offer.image && (
@@ -79,7 +83,7 @@ export default function Offers() {
                 </div>
               </div>
             ))}
-          </div>
+          </StaggerGrid>
         )}
       </div>
 

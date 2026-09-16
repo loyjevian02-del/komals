@@ -1,5 +1,6 @@
 import { useSettings } from '../lib/useSettings.js';
 import ContactDetails from '../components/ContactDetails.jsx';
+import Reveal from '../components/animations/Reveal.jsx';
 
 export default function Contact() {
   const settings = useSettings();
@@ -14,19 +15,23 @@ export default function Contact() {
   return (
     <div>
       {/* Page Header */}
-      <div className="contact-page-header">
-        <div className="container">
-          <span className="section-eyebrow">Get in Touch</span>
-          <h1 className="contact-page-header__title">Contact Us</h1>
-          <p className="contact-page-header__sub">
-            Reach out to {settings.siteName || "Komal's Sweet Palace"} — we're happy to help.
-          </p>
+      <Reveal>
+        <div className="contact-page-header">
+          <div className="container">
+            <span className="section-eyebrow">Get in Touch</span>
+            <h1 className="contact-page-header__title">Contact Us</h1>
+            <p className="contact-page-header__sub">
+              Reach out to {settings.siteName || "Komal's Sweet Palace"} — we're happy to help.
+            </p>
+          </div>
         </div>
-      </div>
+      </Reveal>
 
-      <div className="container contact-container">
-        <ContactDetails settings={settings} />
-      </div>
+      <Reveal delay={0.1}>
+        <div className="container contact-container">
+          <ContactDetails settings={settings} />
+        </div>
+      </Reveal>
 
       <style>{`
         .contact-page-header {

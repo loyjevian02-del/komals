@@ -5,6 +5,8 @@ import { api, imageUrl } from '../lib/api.js';
 import ProductCard from '../components/ProductCard.jsx';
 import Lightbox from '../components/Lightbox.jsx';
 import Pagination from '../components/Pagination.jsx';
+import StaggerGrid from '../components/animations/StaggerGrid.jsx';
+import Reveal from '../components/animations/Reveal.jsx';
 
 export default function CategoryProducts() {
   const { slug } = useParams();
@@ -175,9 +177,9 @@ export default function CategoryProducts() {
         </div>
       ) : (
         <>
-          <div className="product-grid" style={{ display: 'grid', gap: 16, gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))' }}>
+          <StaggerGrid className="product-grid" style={{ display: 'grid', gap: 16, gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))' }}>
             {products.map((p) => <ProductCard key={p.id} product={p} />)}
-          </div>
+          </StaggerGrid>
           <Pagination
             page={page}
             totalPages={totalPages}

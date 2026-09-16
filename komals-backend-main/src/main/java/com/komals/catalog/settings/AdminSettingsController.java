@@ -42,6 +42,8 @@ public class AdminSettingsController {
         settings.setStoryHeading(req.storyHeading());
         settings.setStoryBody(req.storyBody());
         settings.setStoryImage(req.storyImage());
+        settings.setTermsContent(req.termsContent());
+        settings.setPrivacyContent(req.privacyContent());
         return repository.save(settings);
     }
 
@@ -61,6 +63,8 @@ public class AdminSettingsController {
             String storyEyebrow,
             String storyHeading,
             String storyBody,
-            String storyImage) {
+            String storyImage,
+            String termsContent,
+            String privacyContent) {
     }
 }

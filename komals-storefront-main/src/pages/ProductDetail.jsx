@@ -4,6 +4,7 @@ import { ChevronLeft } from 'lucide-react';
 import { api, imageUrl } from '../lib/api.js';
 import { unitLabel } from '../lib/unit.js';
 import Seo from '../components/Seo.jsx';
+import Reveal from '../components/animations/Reveal.jsx';
 
 export default function ProductDetail() {
   const { slug } = useParams();
@@ -115,8 +116,9 @@ export default function ProductDetail() {
         </div>
       </div>
 
-      <div className="container pdp-container">
-        <div className="pdp-grid">
+      <Reveal>
+        <div className="container pdp-container">
+          <div className="pdp-grid">
 
           {/* Ã¢â€â‚¬Ã¢â€â‚¬ Left: Image Gallery Ã¢â€â‚¬Ã¢â€â‚¬ */}
           <div className="pdp-gallery">
@@ -222,6 +224,7 @@ export default function ProductDetail() {
           </div>
         </div>
       </div>
+    </Reveal>
 
       <style>{`
         /* Ã¢â€â‚¬Ã¢â€â‚¬ Loading Ã¢â€â‚¬Ã¢â€â‚¬ */

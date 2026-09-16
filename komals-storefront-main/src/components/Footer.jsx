@@ -139,6 +139,9 @@ export default function Footer() {
           <div className="ksp-footer__legal">
             <Link to="/terms-and-conditions" className="ksp-footer__legal-link">Terms & Conditions</Link>
             <Link to="/privacy-policy" className="ksp-footer__legal-link">Privacy Policy</Link>
+            <a href="https://binaryflow.in/" target="_blank" rel="noreferrer" className="ksp-footer__legal-link">
+              Developed by BinaryFlow
+            </a>
           </div>
         </div>
       </div>

@@ -1,35 +1,52 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-export default function StaggerGrid({ children, className = '' }) {
+export default function StaggerGrid({
+  children,
+  stagger = 0.07,
+  delay = 0,
+  duration = 0.75,
+  className = '',
+  style = {},
+}) {
   const container = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.08
-      }
-    }
+        staggerChildren: stagger,
+        delayChildren: delay,
+      },
+    },
   };
 
   const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } }
+    hidden: { opacity: 0, y: 24, scale: 0.98, filter: 'blur(3px)' },
+    show: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      filter: 'blur(0px)',
+      transition: {
+        duration,
+        ease: [0.16, 1, 0.3, 1],
+      },
+    },
   };
 
   return (
     <motion.div
       className={className}
+      style={style}
       variants={container}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, margin: "-20px" }}
+      viewport={{ once: true, margin: '-40px 0px' }}
     >
-      {React.Children.map(children, (child) => (
-        <motion.div variants={item}>
-          {child}
-        </motion.div>
-      ))}
+      {React.Children.map(children, (child) => {
+        if (!child) return null;
+        return <motion.div variants={item}>{child}</motion.div>;
+      })}
     </motion.div>
   );
 }

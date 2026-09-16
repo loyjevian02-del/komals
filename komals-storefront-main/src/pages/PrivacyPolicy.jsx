@@ -1,3 +1,5 @@
+import { useSettings } from '../lib/useSettings.js';
+
 function Section({ title, children }) {
   return (
     <div style={{ marginBottom: 20 }}>
@@ -7,14 +9,13 @@ function Section({ title, children }) {
   );
 }
 
-export default function PrivacyPolicy() {
+function DefaultPrivacyPolicy() {
   return (
-    <div className="container" style={{ padding: '24px 16px 48px', maxWidth: 720 }}>
-      <h1 style={{ fontSize: 22, marginBottom: 20 }}>Privacy Policy</h1>
-
+    <>
       <Section title="Introduction">
-        Jayalakshmi Hyper Mart ("we", "us", "our"), a retail store in Koppa, respects your privacy.
-        This page explains what information we collect through this website and how it is used.
+        Komal's Sweet Palace ("we", "us", "our"), a traditional sweets store in Mangaluru, respects
+        your privacy. This page explains what information we collect through this website and how it
+        is used.
       </Section>
 
       <Section title="Information We Collect">
@@ -55,6 +56,25 @@ export default function PrivacyPolicy() {
         If you have questions about this privacy policy or how your information is handled, please
         reach out via our <a href="/contact">Contact page</a>.
       </Section>
+    </>
+  );
+}
+
+export default function PrivacyPolicy() {
+  const settings = useSettings();
+
+  return (
+    <div className="container" style={{ padding: '24px 16px 48px', maxWidth: 720 }}>
+      <h1 style={{ fontSize: 22, marginBottom: 20 }}>Privacy Policy</h1>
+
+      {settings?.privacyContent ? (
+        <div
+          style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--on-surface-variant)' }}
+          dangerouslySetInnerHTML={{ __html: settings.privacyContent }}
+        />
+      ) : (
+        <DefaultPrivacyPolicy />
+      )}
     </div>
   );
 }

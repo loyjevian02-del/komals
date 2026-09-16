@@ -225,12 +225,18 @@ export default function Header() {
           position: sticky;
           top: 0;
           z-index: 100;
-          background: var(--surface-container-lowest);
+          background: rgba(255, 255, 255, 0.98);
           border-bottom: 1px solid var(--outline-variant);
-          transition: box-shadow 0.3s ease;
+          transition: background 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                      box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                      border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .ksp-header--scrolled {
-          box-shadow: var(--shadow-sm);
+          background: rgba(255, 255, 255, 0.88);
+          backdrop-filter: blur(18px) saturate(180%);
+          -webkit-backdrop-filter: blur(18px) saturate(180%);
+          border-bottom-color: rgba(211, 204, 204, 0.6);
+          box-shadow: 0 8px 24px -4px rgba(26, 20, 22, 0.08), 0 1px 2px rgba(26, 20, 22, 0.04);
         }
 
         .ksp-header__inner {
@@ -238,6 +244,11 @@ export default function Header() {
           align-items: center;
           height: 68px;
           gap: 20px;
+          transition: height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .ksp-header--scrolled .ksp-header__inner {
+          height: 60px;
         }
 
         /* ── Logo ── */

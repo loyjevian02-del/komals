@@ -83,8 +83,34 @@
 
 
 /* ===================================================
-   RESET & BASE
+   SMOOTH SCROLLING (LENIS) & RESET & BASE
    =================================================== */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
 *,
 *::before,
 *::after {
@@ -301,8 +327,8 @@ h6 {
    SCROLLBAR
    =================================================== */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -311,11 +337,18 @@ h6 {
 
 ::-webkit-scrollbar-thumb {
   background: var(--outline);
-  border-radius: 3px;
+  border-radius: 999px;
+  border: 2px solid var(--surface-container-low);
+  transition: background 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-light);
+  background: var(--primary);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--outline) var(--surface-container-low);
 }
 
 /* ===================================================

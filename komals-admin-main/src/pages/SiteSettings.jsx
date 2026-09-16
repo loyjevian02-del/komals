@@ -4,8 +4,8 @@ import { ImageUploader } from '../components/ImageUploader.jsx';
 
 const empty = {
   siteName: '', logo: '', contactPhone: '', supportPhone: '', contactEmail: '', address: '', mapsUrl: '',
-  whatsappNumber: '', whatsappCommunityUrl: '', facebookUrl: '', instagramUrl: '', storeHours: '', storyEyebrow: '', storyHeading: '', storyBody: '', storyImage: ''
-
+  whatsappNumber: '', whatsappCommunityUrl: '', facebookUrl: '', instagramUrl: '', storeHours: '', storyEyebrow: '', storyHeading: '', storyBody: '', storyImage: '',
+  termsContent: '', privacyContent: ''
 };
 
 export default function SiteSettings() {
@@ -103,6 +103,16 @@ export default function SiteSettings() {
             <label>Instagram URL</label>
             <input value={form.instagramUrl || ''} onChange={(e) => set('instagramUrl', e.target.value)} />
           </div>
+        </div>
+
+        <h2 style={{ fontSize: 15, margin: '20px 0 4px', fontWeight: 650 }}>Legal Pages</h2>
+        <div className="field">
+          <label>Terms &amp; Conditions (HTML)</label>
+          <textarea rows={10} value={form.termsContent || ''} onChange={(e) => set('termsContent', e.target.value)} placeholder="Leave blank to use the default terms text." />
+        </div>
+        <div className="field">
+          <label>Privacy Policy (HTML)</label>
+          <textarea rows={10} value={form.privacyContent || ''} onChange={(e) => set('privacyContent', e.target.value)} placeholder="Leave blank to use the default privacy text." />
         </div>
 
         <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginTop: 8 }}>
