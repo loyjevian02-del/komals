@@ -4,6 +4,8 @@ import { api, imageUrl } from '../lib/api.js';
 import { ArrowRight } from 'lucide-react';
 import StaggerGrid from '../components/animations/StaggerGrid.jsx';
 import Reveal from '../components/animations/Reveal.jsx';
+import Seo from '../components/Seo.jsx';
+import { useSsrReady } from '../lib/useSsrReady.js';
 
 export default function Categories() {
   const [categories, setCategories] = useState([]);
@@ -16,8 +18,14 @@ export default function Categories() {
       .finally(() => setLoading(false));
   }, []);
 
+  useSsrReady(!loading);
+
   return (
     <div>
+      <Seo
+        title="Shop by Category"
+        description="Explore all categories of handcrafted Indian sweets, halwas and savouries at Komal's Sweet Palace."
+      />
       {/* Page Header */}
       <Reveal>
         <div className="cats-page-header">

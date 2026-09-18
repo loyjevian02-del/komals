@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 
-const SITE_NAME = "Komal's Sweet Palace";
-const SITE_URL = 'https://komalssweetpalace.in';
+export const SITE_NAME = "Komal's Sweet Palace";
+export const SITE_URL = 'https://komalssweetpalace.in';
+const DEFAULT_IMAGE = `${SITE_URL}/favicon.png`;
 
-function setMeta(name, content) {
+function setMetaByName(name, content) {
   if (!content) return;
   let element = document.querySelector(`meta[name="${name}"]`);
   if (!element) {
@@ -14,13 +15,42 @@ function setMeta(name, content) {
   element.content = content;
 }
 
-export default function Seo({ title, description, schema }) {
+function setMetaByProperty(property, content) {
+  if (!content) return;
+  let element = document.querySelector(`meta[property="${property}"]`);
+  if (!element) {
+    element = document.createElement('meta');
+    element.setAttribute('property', property);
+    document.head.appendChild(element);
+  }
+  element.content = content;
+}
+
+export default function Seo({ title, description, image, schema }) {
   useEffect(() => {
-    document.title = title ? `${title} | ${SITE_NAME}` : SITE_NAME;
-    setMeta('description', description);
+    const fullTitle = title ? `${title} | ${SITE_NAME}` : SITE_NAME;
+    const canonicalHref = `${SITE_URL}${window.location.pathname}`;
+    const ogImage = image || DEFAULT_IMAGE;
+
+    document.title = fullTitle;
+    setMetaByName('description', description);
+
     let canonical = document.querySelector('link[rel="canonical"]');
     if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); }
-    canonical.href = `${SITE_URL}${window.location.pathname}`;
+    canonical.href = canonicalHref;
+
+    setMetaByProperty('og:title', fullTitle);
+    setMetaByProperty('og:description', description);
+    setMetaByProperty('og:type', 'website');
+    setMetaByProperty('og:url', canonicalHref);
+    setMetaByProperty('og:site_name', SITE_NAME);
+    setMetaByProperty('og:image', ogImage);
+
+    setMetaByName('twitter:card', 'summary_large_image');
+    setMetaByName('twitter:title', fullTitle);
+    setMetaByName('twitter:description', description);
+    setMetaByName('twitter:image', ogImage);
+
     const id = 'page-structured-data';
     document.getElementById(id)?.remove();
     if (schema) {
@@ -29,7 +59,7 @@ export default function Seo({ title, description, schema }) {
       document.head.appendChild(script);
     }
     return () => document.getElementById(id)?.remove();
-  }, [title, description, schema]);
+  }, [title, description, image, schema]);
   return null;
 }
 

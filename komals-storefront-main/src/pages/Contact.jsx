@@ -1,9 +1,13 @@
 import { useSettings } from '../lib/useSettings.js';
 import ContactDetails from '../components/ContactDetails.jsx';
 import Reveal from '../components/animations/Reveal.jsx';
+import Seo from '../components/Seo.jsx';
+import { useSsrReady } from '../lib/useSsrReady.js';
 
 export default function Contact() {
   const settings = useSettings();
+
+  useSsrReady(!!settings);
 
   if (!settings) return (
     <div className="container" style={{ padding: '80px 24px', textAlign: 'center' }}>
@@ -14,6 +18,10 @@ export default function Contact() {
 
   return (
     <div>
+      <Seo
+        title="Contact Us"
+        description={`Get in touch with ${settings.siteName || "Komal's Sweet Palace"}.`}
+      />
       {/* Page Header */}
       <Reveal>
         <div className="contact-page-header">

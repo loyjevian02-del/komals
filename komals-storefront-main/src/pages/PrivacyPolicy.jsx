@@ -1,4 +1,6 @@
 import { useSettings } from '../lib/useSettings.js';
+import Seo from '../components/Seo.jsx';
+import { useSsrReady } from '../lib/useSsrReady.js';
 
 function Section({ title, children }) {
   return (
@@ -62,9 +64,14 @@ function DefaultPrivacyPolicy() {
 
 export default function PrivacyPolicy() {
   const settings = useSettings();
+  useSsrReady(true);
 
   return (
     <div className="container" style={{ padding: '24px 16px 48px', maxWidth: 720 }}>
+      <Seo
+        title="Privacy Policy"
+        description="Privacy policy for the Komal's Sweet Palace website describing what information is collected and how it's used."
+      />
       <h1 style={{ fontSize: 22, marginBottom: 20 }}>Privacy Policy</h1>
 
       {settings?.privacyContent ? (

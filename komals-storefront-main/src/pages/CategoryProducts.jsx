@@ -7,6 +7,8 @@ import Lightbox from '../components/Lightbox.jsx';
 import Pagination from '../components/Pagination.jsx';
 import StaggerGrid from '../components/animations/StaggerGrid.jsx';
 import Reveal from '../components/animations/Reveal.jsx';
+import Seo from '../components/Seo.jsx';
+import { useSsrReady } from '../lib/useSsrReady.js';
 
 export default function CategoryProducts() {
   const { slug } = useParams();
@@ -21,16 +23,20 @@ export default function CategoryProducts() {
   const [totalElements, setTotalElements] = useState(0);
   const [loading, setLoading] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(null);
+  const [categoriesLoaded, setCategoriesLoaded] = useState(false);
+  const [productsLoadedOnce, setProductsLoadedOnce] = useState(false);
 
   // Load all categories for pills, and current category details if a slug is present
   useEffect(() => {
-    api.get('/store/categories').then((r) => setAllCategories(r.data)).catch(() => { });
+    api.get('/store/categories').then((r) => setAllCategories(r.data)).catch(() => { }).finally(() => setCategoriesLoaded(true));
     if (slug) {
       api.get(`/store/categories/${slug}`).then((r) => setCategory(r.data)).catch(() => setCategory(null));
     } else {
       setCategory(null);
     }
   }, [slug]);
+
+  useSsrReady(categoriesLoaded && productsLoadedOnce);
 
   // Sync page state with query param
   useEffect(() => {
@@ -66,6 +72,7 @@ export default function CategoryProducts() {
       })
       .finally(() => {
         setLoading(false);
+        setProductsLoadedOnce(true);
       });
   }, [slug, page]);
 
@@ -90,9 +97,14 @@ export default function CategoryProducts() {
 
   const gallery = category?.gallery || [];
   const showGallery = !loading && products.length === 0 && gallery.length > 0;
+  const pageTitle = slug ? (category?.name || 'Category') : 'All Delicacies';
+  const pageDescription = slug
+    ? (category?.description || `Browse ${category?.name || 'this category'} from Komal's Sweet Palace — traditional Mangaluru sweets, halwas and savouries.`)
+    : "Browse all delicacies from Komal's Sweet Palace — traditional Mangaluru sweets, halwas, chakkuli and savouries.";
 
   return (
     <div className="container" style={{ padding: '36px 24px 80px' }}>
+      <Seo title={pageTitle} description={pageDescription} />
 
       {/* Category Filter Pills */}
       <div className="cat-filter-row" role="navigation" aria-label="Category filters" style={{ display: 'flex', gap: 8, overflowX: 'auto', marginBottom: 24, paddingBottom: 4 }}>
@@ -171,7 +183,7 @@ export default function CategoryProducts() {
                 overflow: 'hidden', aspectRatio: '1 / 1', background: 'var(--surface-container-low)',
               }}
             >
-              <img src={imageUrl(img)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              <img src={imageUrl(img)} alt={`${category?.name || 'Gallery'} photo ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </button>
           ))}
         </div>

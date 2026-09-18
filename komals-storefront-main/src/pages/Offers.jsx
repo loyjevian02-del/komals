@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { api, imageUrl } from '../lib/api.js';
 import Reveal from '../components/animations/Reveal.jsx';
 import StaggerGrid from '../components/animations/StaggerGrid.jsx';
+import Seo from '../components/Seo.jsx';
+import { useSsrReady } from '../lib/useSsrReady.js';
 
 export default function Offers() {
   const [offers, setOffers] = useState([]);
@@ -14,8 +16,14 @@ export default function Offers() {
       .finally(() => setLoading(false));
   }, []);
 
+  useSsrReady(!loading);
+
   return (
     <div>
+      <Seo
+        title="Offers & Promotions"
+        description="Browse current offers and promotions on traditional Mangaluru sweets, halwas and savouries from Komal's Sweet Palace."
+      />
       {/* Page Header */}
       <Reveal>
         <div className="offers-page-header">

@@ -3,6 +3,8 @@ import { api } from '../lib/api.js';
 import GalleryMosaic from '../components/GalleryMosaic.jsx';
 import Lightbox from '../components/Lightbox.jsx';
 import Reveal from '../components/animations/Reveal.jsx';
+import Seo from '../components/Seo.jsx';
+import { useSsrReady } from '../lib/useSsrReady.js';
 
 export default function Gallery() {
   const [images, setImages] = useState([]);
@@ -16,8 +18,14 @@ export default function Gallery() {
       .finally(() => setLoading(false));
   }, []);
 
+  useSsrReady(!loading);
+
   return (
     <div>
+      <Seo
+        title="Gallery"
+        description="Photos from Komal's Sweet Palace — our sweets, our store and our celebrations."
+      />
       <Reveal>
         <div className="gallery-page-header">
           <div className="container">

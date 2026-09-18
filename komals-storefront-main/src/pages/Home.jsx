@@ -9,6 +9,7 @@ import Seo, { siteSchema } from '../components/Seo.jsx';
 import ContactDetails from '../components/ContactDetails.jsx';
 import GalleryMosaic from '../components/GalleryMosaic.jsx';
 import Lightbox from '../components/Lightbox.jsx';
+import { useSsrReady } from '../lib/useSsrReady.js';
 function OfferCard({ offer }) {
   return (
     <motion.div
@@ -111,14 +112,17 @@ export default function Home() {
   const [sortBy] = useState('createdAt,desc');
   const [productsLoading, setProductsLoading] = useState(true);
   const [settings, setSettings] = useState(null);
+  const [settingsLoaded, setSettingsLoaded] = useState(false);
   const [galleryImages, setGalleryImages] = useState([]);
   const [lightboxIndex, setLightboxIndex] = useState(null);
 
   useEffect(() => {
     api.get('/store/offers').then((r) => setOffers(r.data)).catch(() => { });
-    api.get('/store/settings').then((r) => setSettings(r.data)).catch(() => { });
+    api.get('/store/settings').then((r) => setSettings(r.data)).catch(() => { }).finally(() => setSettingsLoaded(true));
     api.get('/store/gallery').then((r) => setGalleryImages(r.data)).catch(() => { });
   }, []);
+
+  useSsrReady(!productsLoading && settingsLoaded);
 
 
   const loadFeaturedProducts = useCallback(() => {

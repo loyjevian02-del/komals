@@ -1,4 +1,6 @@
 import { useSettings } from '../lib/useSettings.js';
+import Seo from '../components/Seo.jsx';
+import { useSsrReady } from '../lib/useSsrReady.js';
 
 function Section({ title, children }) {
   return (
@@ -56,9 +58,14 @@ function DefaultTerms() {
 
 export default function Terms() {
   const settings = useSettings();
+  useSsrReady(true);
 
   return (
     <div className="container" style={{ padding: '24px 16px 48px', maxWidth: 720 }}>
+      <Seo
+        title="Terms & Conditions"
+        description="Terms and conditions for using the Komal's Sweet Palace website."
+      />
       <h1 style={{ fontSize: 22, marginBottom: 20 }}>Terms &amp; Conditions</h1>
 
       {settings?.termsContent ? (

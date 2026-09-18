@@ -1,10 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
-import { api, imageUrl } from '../lib/api.js';
+import { Plus, Pencil, Trash2, Upload } from 'lucide-react';
+import { api, imageUrl, uploadImage } from '../lib/api.js';
+
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB upload limit; compressed below 500KB on backend
 
 export default function Gallery() {
   const [images, setImages] = useState([]);
+  const [bulkUploading, setBulkUploading] = useState(false);
+  const [bulkProgress, setBulkProgress] = useState(null);
+  const bulkInputRef = useRef(null);
 
   function load() {
     api.get('/admin/gallery').then((r) => setImages(r.data)).catch(() => {});
@@ -15,6 +20,40 @@ export default function Gallery() {
   async function remove(id) {
     if (!confirm('Delete this gallery image?')) return;
     await api.delete(`/admin/gallery/${id}`);
+    load();
+  }
+
+  async function handleBulkFiles(e) {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    const oversized = files.filter((f) => f.size > MAX_FILE_SIZE);
+    if (oversized.length > 0) {
+      alert(`${oversized.length} file(s) are over 50MB and will be skipped.`);
+    }
+    const toUpload = files.filter((f) => f.size <= MAX_FILE_SIZE);
+
+    setBulkUploading(true);
+    let nextRank = images.reduce((max, img) => Math.max(max, img.rank), 0) + 1;
+    let done = 0;
+    let failed = 0;
+    setBulkProgress({ done, total: toUpload.length });
+
+    for (const file of toUpload) {
+      try {
+        const url = await uploadImage(file);
+        await api.post('/admin/gallery', { image: url, active: true, rank: nextRank++ });
+      } catch {
+        failed++;
+      }
+      done++;
+      setBulkProgress({ done, total: toUpload.length });
+    }
+
+    setBulkUploading(false);
+    setBulkProgress(null);
+    e.target.value = '';
+    if (failed > 0) alert(`${failed} image(s) failed to upload.`);
     load();
   }
 
@@ -32,7 +71,28 @@ export default function Gallery() {
     <div>
       <div className="page-header">
         <h1 style={{ fontSize: 20, margin: 0 }}>Gallery</h1>
-        <Link to="/gallery/new" className="btn btn-primary"><Plus size={16} /> New Image</Link>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => bulkInputRef.current?.click()}
+            disabled={bulkUploading}
+          >
+            <Upload size={14} />
+            {bulkUploading
+              ? `Uploading ${bulkProgress?.done ?? 0}/${bulkProgress?.total ?? 0}…`
+              : 'Upload Multiple'}
+          </button>
+          <input
+            ref={bulkInputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            hidden
+            onChange={handleBulkFiles}
+          />
+          <Link to="/gallery/new" className="btn btn-primary"><Plus size={16} /> New Image</Link>
+        </div>
       </div>
       <div className="table-scroll">
         <table className="table">

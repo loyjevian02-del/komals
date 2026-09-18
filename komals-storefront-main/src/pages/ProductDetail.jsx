@@ -3,7 +3,8 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
 import { api, imageUrl } from '../lib/api.js';
 import { unitLabel } from '../lib/unit.js';
-import Seo from '../components/Seo.jsx';
+import Seo, { SITE_URL } from '../components/Seo.jsx';
+import { useSsrReady } from '../lib/useSsrReady.js';
 import Reveal from '../components/animations/Reveal.jsx';
 
 export default function ProductDetail() {
@@ -30,6 +31,8 @@ export default function ProductDetail() {
       })
       .finally(() => setLoading(false));
   }, [slug]);
+
+  useSsrReady(!loading);
 
   function handleBack(e) {
     e.preventDefault();
@@ -87,16 +90,47 @@ export default function ProductDetail() {
     : null;
   const seoTitle = product.seoTitle || `${product.title} in Mangaluru`;
   const seoDescription = product.seoDescription || product.description || `Enquire about ${product.title} from Komal's Sweet Palace in Mangaluru.`;
+  const productUrl = `${SITE_URL}/products/${encodeURIComponent(product.slug || product.id)}`;
+
   const productSchema = {
-    '@context': 'https://schema.org', '@type': 'Product', name: product.title,
+    '@type': 'Product', name: product.title,
     description: seoDescription, sku: product.partNo,
     brand: { '@type': 'Brand', name: "Komal's Sweet Palace" },
     image: images.filter(Boolean).map(imageUrl),
+    // Only added when the API actually returns a price — never invented.
+    ...(product.price != null ? {
+      offers: {
+        '@type': 'Offer',
+        priceCurrency: 'INR',
+        price: String(product.price),
+        availability: product.active ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+        url: productUrl,
+      },
+    } : {}),
+  };
+
+  const breadcrumbSchema = product.categoryName ? {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+      { '@type': 'ListItem', position: 2, name: product.categoryName, item: `${SITE_URL}/categories/${product.categorySlug}` },
+      { '@type': 'ListItem', position: 3, name: product.title, item: productUrl },
+    ],
+  } : null;
+
+  const pageSchema = {
+    '@context': 'https://schema.org',
+    '@graph': [productSchema, breadcrumbSchema].filter(Boolean),
   };
 
   return (
     <div>
-      <Seo title={seoTitle} description={seoDescription} schema={productSchema} />
+      <Seo
+        title={seoTitle}
+        description={seoDescription}
+        image={images[0] ? imageUrl(images[0]) : undefined}
+        schema={pageSchema}
+      />
       {/* Breadcrumb/Back */}
       <div className="pdp-breadcrumb">
         <div className="container">
@@ -154,7 +188,7 @@ export default function ProductDetail() {
                     aria-current={i === activeImage}
                   >
                     {img ? (
-                      <img src={imageUrl(img)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <img src={imageUrl(img)} alt={`${product.title} photo ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     ) : (
                       <span style={{ fontSize: 20, color: 'var(--primary)' }}>{product.title?.[0] || '?'}</span>
                     )}
