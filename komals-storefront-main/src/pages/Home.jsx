@@ -7,6 +7,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Reveal from '../components/animations/Reveal.jsx';
 import Seo, { siteSchema } from '../components/Seo.jsx';
 import ContactDetails from '../components/ContactDetails.jsx';
+import GalleryMosaic from '../components/GalleryMosaic.jsx';
+import Lightbox from '../components/Lightbox.jsx';
 function OfferCard({ offer }) {
   return (
     <motion.div
@@ -109,10 +111,13 @@ export default function Home() {
   const [sortBy] = useState('createdAt,desc');
   const [productsLoading, setProductsLoading] = useState(true);
   const [settings, setSettings] = useState(null);
+  const [galleryImages, setGalleryImages] = useState([]);
+  const [lightboxIndex, setLightboxIndex] = useState(null);
 
   useEffect(() => {
     api.get('/store/offers').then((r) => setOffers(r.data)).catch(() => { });
     api.get('/store/settings').then((r) => setSettings(r.data)).catch(() => { });
+    api.get('/store/gallery').then((r) => setGalleryImages(r.data)).catch(() => { });
   }, []);
 
 
@@ -255,6 +260,36 @@ export default function Home() {
           </div>
         </section>
       </Reveal>
+
+      {galleryImages.length > 0 && (
+        <Reveal direction="up">
+          <section className="section home-gallery" aria-label="Gallery">
+            <div className="container">
+              <div className="section-header">
+                <div>
+                  <span className="section-eyebrow">A Glimpse Inside</span>
+                  <h2 className="section-heading">Our Gallery</h2>
+                </div>
+                <Link to="/gallery" className="section-header__link">More <ArrowRight size={14} /></Link>
+              </div>
+              <GalleryMosaic
+                images={galleryImages.slice(0, 8)}
+                onImageClick={setLightboxIndex}
+              />
+            </div>
+          </section>
+        </Reveal>
+      )}
+
+      {lightboxIndex !== null && (
+        <Lightbox
+          images={galleryImages.slice(0, 8).map((g) => g.image)}
+          index={lightboxIndex}
+          onIndexChange={setLightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+        />
+      )}
+
       <Reveal>
         <section id="our-story" className="story-section" aria-label="Our story">
           <div id="about-us" />

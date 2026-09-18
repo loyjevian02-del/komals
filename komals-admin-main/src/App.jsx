@@ -9,6 +9,8 @@ import Categories from './pages/Categories.jsx';
 import CategoryForm from './pages/CategoryForm.jsx';
 import Offers from './pages/Offers.jsx';
 import OfferForm from './pages/OfferForm.jsx';
+import Gallery from './pages/Gallery.jsx';
+import GalleryForm from './pages/GalleryForm.jsx';
 import SiteSettings from './pages/SiteSettings.jsx';
 import Insights from './pages/Insights.jsx';
 import Users from './pages/Users.jsx';
@@ -64,6 +66,8 @@ export default function App() {
         <Route path="/categories/:id" element={<AdminOnly><CategoryForm /></AdminOnly>} />
         <Route path="/offers" element={<AdminOnly><Offers /></AdminOnly>} />
         <Route path="/offers/:id" element={<AdminOnly><OfferForm /></AdminOnly>} />
+        <Route path="/gallery" element={<AdminOnly><Gallery /></AdminOnly>} />
+        <Route path="/gallery/:id" element={<AdminOnly><GalleryForm /></AdminOnly>} />
         <Route path="/users" element={<AdminOnly><Users /></AdminOnly>} />
         <Route path="/audit-logs" element={<AdminOnly><AuditLogs /></AdminOnly>} />
         <Route path="/settings" element={<AdminOnly><SiteSettings /></AdminOnly>} />

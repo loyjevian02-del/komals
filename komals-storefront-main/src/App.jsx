@@ -8,6 +8,7 @@ import SmoothScrollProvider from './lib/SmoothScrollProvider.jsx';
 import Home from './pages/Home.jsx';
 import Offers from './pages/Offers.jsx';
 import Categories from './pages/Categories.jsx';
+import Gallery from './pages/Gallery.jsx';
 import CategoryProducts from './pages/CategoryProducts.jsx';
 import ProductDetail from './pages/ProductDetail.jsx';
 import SearchResults from './pages/SearchResults.jsx';
@@ -31,6 +32,7 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/offers" element={<Offers />} />
             <Route path="/categories" element={<Categories />} />
+            <Route path="/gallery" element={<Gallery />} />
             <Route path="/products" element={<CategoryProducts />} />
             <Route path="/categories/:slug" element={<CategoryProducts />} />
             <Route path="/products/:slug" element={<ProductDetail />} />
